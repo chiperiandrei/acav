@@ -1,2 +1,5 @@
 # acav
 acav (audio content advanced visualizer)
+
+Sa se conceapa o aplicaţie bazata pe **(micro-)servicii** Web oferind modalităţi de vizualizare avansată a conţinuturilor muzicale pe care le asculta/partajeaza online anumite (grupuri de) persoane.<br>
+Se vor prelua informaţii de la servicii (streaming) de profil (vezi liste de API-uri de interes si alte API-uri specifice). Ca exemple de vizualizări pot fi considerate: figurarea grafului melodiilor favorite ale mai multor utilizatori având o anumita localizare geografică ori preocupări comune, relaţiile între melodii similare pe baza meta-datelor asociate fiecarei productii muzicale, generarea unor grupuri de utilizatori împărtăşind interese comune (e.g., pasionatii de muzica rock progresiv compusa intre anii 1970 si 1977 si interpretata de grupuri europene), eventual folosindu-se termeni de conţinut (tag-uri) asociate melodiilor. Vizualizarile create vor putea fi exportate ca fisiere PNG si SVG.
