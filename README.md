@@ -7,6 +7,7 @@ Ca exemple de vizualizări pot fi considerate: *figurarea grafului melodiilor fa
 
 ### Shared diagrams:
 - [Overview](https://www.lucidchart.com/invitations/accept/69a6eaa9-2dd8-407b-947e-ee2b69955471)
+- [Getting Latests Updates - Overview](https://www.lucidchart.com/documents/edit/d94d59ce-7de9-46b2-b897-68b6fdc3137f?shared=true#)
 - [Use Case](https://www.lucidchart.com/invitations/accept/be1734ef-9e0c-4e27-b08d-1fbf09560c1d)
 
 - [Spotify 1](https://drive.google.com/file/d/1t9X-1ti6lPd8VRSwuSny8BuB70-nuC7C/view?usp=sharing)
