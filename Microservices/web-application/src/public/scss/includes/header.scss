@@ -1,0 +1,66 @@
+@import "colors";
+
+& {
+  background-color: $header-bg-color;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .15);
+
+  & > .container {
+    display: grid;
+    width: 100%;
+    max-width: 1400px;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    margin: 0 auto;
+    padding: 15px 0;
+
+    & > .logo > a {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 10px;
+      align-items: center;
+      color: $header-logo-color;
+      padding: 0 15px;
+
+      &:hover {
+        text-decoration: none;
+
+        span:nth-child(2):before {
+          opacity: 1;
+        }
+      }
+
+      span {
+        font-family: 'Alata', sans-serif;
+
+        &:first-child {
+          font-size: 2em;
+        }
+
+        &:nth-child(2) {
+          margin-top: -1px;
+          font-size: .95em;
+          position: relative;
+
+          &:before {
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: $header-logo-color;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 1px;
+            height: 2px;
+            opacity: 0;
+            transition: opacity 200ms ease-in;
+          }
+        }
+      }
+    }
+
+    & > .menu {
+      justify-self: end;
+      padding-right: 15px;
+    }
+  }
+}

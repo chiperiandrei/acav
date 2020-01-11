@@ -1,0 +1,18 @@
+@import "includes/reset";
+@import "includes/colors";
+
+body {
+  background-color: $body-bg-color;
+}
+
+header {
+  @import "includes/header";
+}
+
+main {
+  @import "includes/main";
+}
+
+footer {
+  @import "includes/footer";
+}

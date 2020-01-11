@@ -1,22 +1,21 @@
 {
-  "name": "streaming-aggregator",
+  "name": "web-application",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "start-dev": "nodemon src/index.js"
+    "start-dev": "nodemon src/index.js -e *"
   },
   "author": "Deny-Constantin Pătrașcu",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0"
   },
   "devDependencies": {
-    "cookie-parser": "^1.4.4",
-    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "nodemon": "^2.0.2",
-    "request": "^2.88.0"
+    "nodemon": "^2.0.2"
   }
 }

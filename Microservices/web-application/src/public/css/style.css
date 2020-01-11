@@ -1,0 +1,94 @@
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  background-color: #cdcdcd;
+}
+
+header {
+  background-color: #fafafa;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+header > .container {
+  display: grid;
+  width: 100%;
+  max-width: 1400px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  margin: 0 auto;
+  padding: 15px 0;
+}
+header > .container > .logo > a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 10px;
+  align-items: center;
+  color: #212121;
+  padding: 0 15px;
+}
+header > .container > .logo > a:hover {
+  text-decoration: none;
+}
+header > .container > .logo > a:hover span:nth-child(2):before {
+  opacity: 1;
+}
+header > .container > .logo > a span {
+  font-family: "Alata", sans-serif;
+}
+header > .container > .logo > a span:first-child {
+  font-size: 2em;
+}
+header > .container > .logo > a span:nth-child(2) {
+  margin-top: -1px;
+  font-size: 0.95em;
+  position: relative;
+}
+header > .container > .logo > a span:nth-child(2):before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #212121;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 1px;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 200ms ease-in;
+}
+header > .container > .menu {
+  justify-self: end;
+  padding-right: 15px;
+}
+
+main > .container {
+  display: grid;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+footer > .container {
+  display: grid;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+/*# sourceMappingURL=style.css.map */
