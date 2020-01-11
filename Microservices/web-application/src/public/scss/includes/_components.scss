@@ -1,0 +1,13 @@
+@import 'colors';
+
+.button {
+    color: $text-color1;
+    background-color: transparent;
+    padding: 10px 15px;
+    border: 1px solid $text-color1;
+    border-radius: 2px;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
