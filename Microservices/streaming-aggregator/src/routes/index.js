@@ -1,8 +1,6 @@
-const express = require('express');
-const spotifyWrapper = require('./spotify');
+const router = require('express').Router();
+const spotify = require('./spotify');
 
-const app = express();
+router.use('/spotify', spotify);
 
-spotifyWrapper(app);
-
-module.exports = app;
+module.exports = router;
