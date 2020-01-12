@@ -12,6 +12,11 @@ router.get('/', (req, res) => {
     res.render('home');
 });
 
+router.post('/', (req, res) => {
+    console.log(req.body.token);
+    res.render('home');
+});
+
 router.get('/login/spotify', (req, res) => {
     const redirectUri = REDIRECT_URI;
     // http://localhost:8080
@@ -25,30 +30,15 @@ router.get('/login/spotify', (req, res) => {
         if (error) {
             console.error(`${WA} [ERROR]`);
             console.error(error);
-            throw Error('#1');
+            res.redirect(`${redirectUri}#error`);
         }
         res.redirect(response.request.uri.href);
     });
 });
 
-router.post('/', (req, res) => {
-    req.session.token = req.body.token;
-    req.session.save((error) => {
-        if (error) {
-            console.error(`${WA} [ERROR]`);
-            console.error(error);
-            throw Error('#2');
-        }
-    });
-    console.log(req.session.token);
-    console.log(req.sessionID);
-    res.render('home');
-});
-
-router.get('/token', (req, res) => {
-    console.log(req.session.token);
-    console.log(req.sessionID);
-    res.render('home');
-});
+// router.get('/token', (req, res) => {
+//     console.log(spotify);
+//     res.render('home');
+// });
 
 module.exports = router;
