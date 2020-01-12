@@ -1,9 +1,11 @@
 @import "../includes/reset";
 @import "../includes/colors";
+@import "../includes/variables";
 @import "../includes/components";
 
 body {
   background-color: $body-bg-color;
+  margin-top: $header-height;
 }
 
 header {

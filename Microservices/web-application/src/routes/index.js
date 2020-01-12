@@ -9,15 +9,28 @@ const WA = `[${process.env.SERVICE_NAME}]`,
       // http://localhost:3000/api/sas
 
 router.get('/', (req, res) => {
+    console.log(`${WA} GET ${REDIRECT_URI}/`);
+
     res.render('home');
 });
 
 router.post('/', (req, res) => {
-    console.log(req.body.token);
+    console.log(`${WA} POST ${REDIRECT_URI}/`);
+    console.log(`${WA} Spotify token received`); // req.body.token
+    // console.log(req.body.token);
+
     res.render('home');
 });
 
+router.get('/login', (req, res) => {
+    console.log(`${WA} GET ${REDIRECT_URI}/login`);
+
+   res.render('login');
+});
+
 router.get('/login/spotify', (req, res) => {
+    console.log(`${WA} GET ${REDIRECT_URI}/login/spotify`);
+
     const redirectUri = REDIRECT_URI;
     // http://localhost:8080
 

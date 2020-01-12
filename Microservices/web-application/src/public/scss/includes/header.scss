@@ -1,8 +1,13 @@
 @import "colors";
+@import "variables";
 
 & {
+  display: grid;
+  position: fixed;
+  left: 0; right: 0; top: 0;
   background-color: $header-bg-color;
   box-shadow: 0 0 20px rgba(0, 0, 0, .15);
+  height: $header-height;
 
   & > .container {
     display: grid;
