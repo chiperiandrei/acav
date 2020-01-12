@@ -1,13 +1,13 @@
 const express = require('express');
 const expressSession = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
-const dotEnv = require('dotenv');
 
-dotEnv.config();
+const env = require(`./environment`);
+const router = require('./routes');
+
+// console.log(env);
 
 const app = express();
-
-const router = require(`${__dirname}/routes`);
 
 app.set('view engine', 'ejs')
    .set('views', `${__dirname}/views`)
@@ -15,16 +15,17 @@ app.set('view engine', 'ejs')
 
 app.use(express.static(`${__dirname}/public`))
    .use(express.json())
+   .use(express.urlencoded({ extended: true }))
    .use(expressLayouts)
    .use(expressSession({
-        name: process.env.SESS_NAME,
-        secret: process.env.SESS_SECRET,
+        name: env.WA.SESS.NAME,
+        secret: env.WA.SESS.SECRET,
         resave: false,
         saveUninitialized: true,
         cookie: { secure: false }
    }))
    .use('/', router);
 
-const port = process.env.PORT;
-
-app.listen(port);
+app.listen(env.WA.PORT, () => {
+    console.log(`${env.WA.NAME} Listening on port ${env.WA.PORT}...`);
+});

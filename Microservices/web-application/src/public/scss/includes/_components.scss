@@ -6,12 +6,12 @@
     padding: 10px 15px;
     border: 1px solid transparent;
     border-radius: 2px;
-    transition: all 200ms ease-in-out;
+    transition: box-shadow 200ms ease-in-out;
     cursor: pointer;
 
     &:hover {
-        text-decoration: none;
         box-shadow: 0 0 10px rgba(0, 0, 0, .35);
+        text-decoration: none;
     }
 
     &.button-spotify {
@@ -26,7 +26,7 @@
     }
 }
 
-input[type="text"], input[type="password"] {
+input[type="email"], input[type="password"] {
     border: 1px solid transparent;
     border-radius: 2px;
     padding: 10px 15px;

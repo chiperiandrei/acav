@@ -1,47 +1,72 @@
 const router = require('express').Router();
 const request = require('request');
-
-const WA = `[${process.env.SERVICE_NAME}]`,
-      // [WA]
-      REDIRECT_URI = `${process.env.HOSTNAME}:${process.env.PORT}`,
-      // http://localhost:8080
-      REQUEST_URI = `${process.env.SAS_HOSTNAME}:${process.env.SAS_PORT + process.env.SAS_REST_PATH}`;
-      // http://localhost:3000/api/sas
+const env = require('../environment');
 
 router.get('/', (req, res) => {
-    console.log(`${WA} GET ${REDIRECT_URI}/`);
+    console.log(`${env.WA.NAME} GET ${env.WA.URI}/`);
 
     res.render('home');
 });
 
 router.post('/', (req, res) => {
-    console.log(`${WA} POST ${REDIRECT_URI}/`);
-    console.log(`${WA} Spotify token received`); // req.body.token
-    // console.log(req.body.token);
+    console.log(`${env.WA.NAME} POST ${env.WA.URI}/`);
+
+    const token = req.body.token;
+
+    console.log(`${env.WA.NAME} Spotify token received: ${token.slice(0, 20) + '...'}`);
+    // console.log(token);
 
     res.render('home');
 });
 
 router.get('/login', (req, res) => {
-    console.log(`${WA} GET ${REDIRECT_URI}/login`);
+    console.log(`${env.WA.NAME} GET ${env.WA.URI}/login`);
 
    res.render('login');
 });
 
+router.post('/login', (req, res) => {
+    console.log(`${env.WA.NAME} POST ${env.WA.URI}/login`);
+
+    const redirectUri = `${env.WA.URI}/login`;
+    const requestUri = env.UMS.LOGIN;
+
+    const email = req.body.email;
+    const password = req.body.password;
+    const token = req.body.token;
+
+    console.log(req.body);
+
+    if (email && password) {
+        if (password.length >= 1) {
+            request.post(requestUri, {
+                json: { email, password }
+            }, (error, response, body) => {
+                if (error) {
+                    console.error(`${env.WA.NAME} [ERROR]`);
+                    console.error(error);
+                    res.redirect(`${redirectUri}#error`);
+                }
+                console.log(`${env.WA.NAME} POST ${requestUri}`);
+            });
+        }
+    } else if (token) {
+        console.log(token);
+    }
+    // res.render('login');
+});
+
 router.get('/login/spotify', (req, res) => {
-    console.log(`${WA} GET ${REDIRECT_URI}/login/spotify`);
+    console.log(`${env.WA.NAME} GET ${env.WA.URI}/login/spotify`);
 
-    const redirectUri = REDIRECT_URI;
-    // http://localhost:8080
-
-    const requestUri = `${REQUEST_URI}/spotify/login`;
-    // http://localhost:3000/api/sas/spotify/login
+    const redirectUri = env.WA.URI;
+    const requestUri = env.SAS.SPOTIFY.LOGIN;
 
     request.post(requestUri, {
         json: { redirect: redirectUri }
     }, (error, response, _) => {
         if (error) {
-            console.error(`${WA} [ERROR]`);
+            console.error(`${env.WA} [ERROR]`);
             console.error(error);
             res.redirect(`${redirectUri}#error`);
         }
