@@ -40,30 +40,31 @@ router.post(apipath + '/register', (req, res) => {
         res.send("Te-ai inregistrat!!");
     });
 });
+
 router.post(apipath + '/login', (req, res) => {
-    console.log(req.body);
+    // console.log(req.query);
+    // console.log(req.body);
+
     const email = req.body.email;
     const password = req.body.password;
 
-    connection.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function (error, results, fields) {
+    connection.query(
+        'SELECT * FROM users WHERE email = ? AND password = ?',
+        [email, password], (error, results, fields) => {
         if (results.length === 1) {
-            // res.send("Logat!!")
-            console.log('logat');
-
-            request.post('http://localhost:8080/login', {
-                json: { token: 1 }
-            }, (error, response, body) => {
-                if (error) {
-                    console.log(error);
-                    new Error();
-                }
+            res.json({
+                // status: 200,
+                token: 'test1234'
             });
         } else {
-            res.send('email/ pass incorect');
+            res.json({
+                // status: 403,
+                message: 'Email or password is incorrect!'
+            });
         }
-        res.end();
     });
 });
+
 app.use('/', router);
 
 const port = process.env.port || 4000;
