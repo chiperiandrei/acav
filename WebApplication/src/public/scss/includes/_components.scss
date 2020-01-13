@@ -1,0 +1,34 @@
+@import 'colors';
+
+.button {
+    color: $text-color1;
+    background-color: transparent;
+    padding: 10px 15px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    transition: box-shadow 200ms ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 0 10px rgba(0, 0, 0, .35);
+        text-decoration: none;
+    }
+
+    &.button-spotify {
+        display: inline-grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 7px;
+        align-items: baseline;
+        font-size: 1.2em;
+        font-weight: 400;
+        color: #1ed760;
+        background-color: #212121;
+    }
+}
+
+input[type="email"], input[type="password"] {
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 10px 15px;
+    width: 300px;
+}

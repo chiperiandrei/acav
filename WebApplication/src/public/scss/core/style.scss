@@ -1,0 +1,21 @@
+@import "../includes/reset";
+@import "../includes/colors";
+@import "../includes/variables";
+@import "../includes/components";
+
+body {
+  background-color: $body-bg-color;
+  margin-top: $header-height;
+}
+
+header {
+  @import "../includes/header";
+}
+
+main {
+  @import "../includes/main";
+}
+
+footer {
+  @import "../includes/footer";
+}
