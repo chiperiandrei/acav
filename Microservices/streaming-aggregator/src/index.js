@@ -1,27 +1,28 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const dotEnv = require('dotenv');
+const expressSession = require('express-session');
 
-dotEnv.config();
+const env = require('./environment');
+const router = require('./routes');
 
-const router = require(`${__dirname}/routes`);
+// console.log(env);
 
 const app = express();
-
-const port = process.env.PORT;
 
 app.use(express.static(`${__dirname}/public`))
    .use(cors())
    .use(cookieParser())
    .use(express.json())
-   .use(session({
-        secret: process.env.SESSION_SECRET,
-        // cookie: { secure: true },
+   .use(expressSession({
+        name: env.SAS.SESS.NAME,
+        secret: env.SAS.SESS.SECRET,
         resave : false,
-        saveUninitialized : true
+        saveUninitialized : true,
+        cookie: { secure: false }
    }))
-   .use(process.env.REST_PATH, router);
+   .use(env.SAS.REST_PATH, router);
 
-app.listen(port);
+app.listen(env.SAS.PORT, () => {
+    env.message('Listening on port ', env.SAS.PORT);
+});
