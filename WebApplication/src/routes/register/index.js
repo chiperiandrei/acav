@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
     const repeatPassword = req.body['repeat-password'];
 
     if (password === repeatPassword) {
-        if (password.length > 1) {
+        if (password.length >= 8) {
             request.post(requestUri, {
                 json: { email, password }
             }, (error, response, body) => {
