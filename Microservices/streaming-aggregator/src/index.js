@@ -10,8 +10,7 @@ const router = require('./routes');
 
 const app = express();
 
-app.use(express.static(`${__dirname}/public`))
-   .use(cors())
+app.use(cors())
    .use(cookieParser())
    .use(express.json())
    .use(expressSession({
