@@ -29,15 +29,17 @@ router.get('/register', function (req, res) {
 router.get('/login', function (req, res) {
     res.sendFile(path.join(__dirname + '/login.html'));
 });
+
 router.post(apipath + '/register', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    var sql = `INSERT INTO users (email, password) VALUES ('${email}', '${password} ')`;
-    connection.query(sql, function (err, result) {
-        if (err) {
-            res.send("Greseala");
+    const sql = `INSERT INTO users (email, password) VALUES ('${email}', '${password} ')`;
+    connection.query(sql, (error, result) => {
+        if (error) {
+            res.sendStatus(500);
+        } else {
+            res.sendStatus(200);
         }
-        res.send("Te-ai inregistrat!!");
     });
 });
 
@@ -53,12 +55,12 @@ router.post(apipath + '/login', (req, res) => {
         [email, password], (error, results, fields) => {
         if (results.length === 1) {
             res.json({
-                // status: 200,
-                token: 'test1234'
+                status: 200,
+                token: 'test1234' // TODO: Chiperi
             });
         } else {
             res.json({
-                // status: 403,
+                status: 403,
                 message: 'Email or password is incorrect!'
             });
         }
