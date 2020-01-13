@@ -1,38 +1,34 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
-const mysql = require('mysql')
+const mysql = require('mysql');
+const bcrypt = require('bcrypt'); // TODO: Chiperi (add salt and encrypt, etc.)
+const dotEnv = require('dotenv');
+// const request = require('request');
+
+dotEnv.config();
+
+// TODO: add logs for /login, /register
+
 const app = express();
-const path = require('path');
 const router = express.Router();
-const apipath = '/api/ums';
-const request = require('request');
-var bodyParser = require('body-parser');
-var connection = mysql.createConnection({
+
+const REST_PATH = '/api/ums';
+
+const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'acav'
-})
+});
+
 connection.connect();
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-router.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + '/index.html'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-});
-
-router.get('/register', function (req, res) {
-    res.sendFile(path.join(__dirname + '/register.html'));
-});
-
-router.get('/login', function (req, res) {
-    res.sendFile(path.join(__dirname + '/login.html'));
-});
-
-router.post(apipath + '/register', (req, res) => {
+router.post(REST_PATH + '/register', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+
     const sql = `INSERT INTO users (email, password) VALUES ('${email}', '${password} ')`;
     connection.query(sql, (error, result) => {
         if (error) {
@@ -43,10 +39,7 @@ router.post(apipath + '/register', (req, res) => {
     });
 });
 
-router.post(apipath + '/login', (req, res) => {
-    // console.log(req.query);
-    // console.log(req.body);
-
+router.post(REST_PATH + '/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
@@ -55,12 +48,10 @@ router.post(apipath + '/login', (req, res) => {
         [email, password], (error, results, fields) => {
         if (results.length === 1) {
             res.json({
-                status: 200,
                 token: 'test1234' // TODO: Chiperi
             });
         } else {
             res.json({
-                status: 403,
                 message: 'Email or password is incorrect!'
             });
         }
@@ -69,7 +60,7 @@ router.post(apipath + '/login', (req, res) => {
 
 app.use('/', router);
 
-const port = process.env.port || 4000;
+const port = process.env.PORT;
 
 app.listen(port);
 
