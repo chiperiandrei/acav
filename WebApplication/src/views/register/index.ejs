@@ -1,8 +1,8 @@
 <div class="account-wrapper">
     <div class="account-container">
         <div class="account">
-            <h2>Connect with Us!</h2>
-            <form action="/login" method="POST">
+            <h2>Create your own account!</h2>
+            <form action="/register" method="POST">
                 <div class="form-container">
                     <label for="email"><i class="fas fa-at"></i> Email</label>
                     <input type="email" id="email" name="email" required>
@@ -11,13 +11,16 @@
                            pattern=".{1,}"
                            title="Password must have at least 8 characters."
                            required>
+                    <label for="repeat-password"><i class="fas fa-key"></i> Repeat password</label>
+                    <input type="password" id="repeat-password" name="repeat-password"
+                           pattern=".{1,}"
+                           title="Password must have at least 8 characters."
+                           required>
                 </div>
-                <div class="error-message"><%= message %></div>
-                <button type="submit" class="button button-submit">Login <i class="fas fa-hand-pointer"></i></button>
+                <div class="error-message"></div>
+                <button type="submit" class="button button-submit">Sign Up</button>
             </form>
         </div>
-        <div class="unknown">
-            Unknown Area
-        </div>
+        <div class="unknown"></div>
     </div>
 </div>
