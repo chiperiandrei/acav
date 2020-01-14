@@ -33,6 +33,14 @@ const env = {
     }
 };
 
+// UMS
+env.UMS.LOGIN = env.UMS.URI + process.env.UMS_LOGIN_PATH;
+
+// SAS
+env.SAS.SPOTIFY = {
+    LOGIN: env.SAS.URI + process.env.SAS_SPOTIFY_LOGIN_PATH
+};
+
 env.log = (method, uri, data, received) => {
     console.log(`${env.WA.NAME} ${method} ${uri}`);
 
@@ -44,16 +52,6 @@ env.log = (method, uri, data, received) => {
 
     if (data) {
         console.log(data);
-    }
-};
-
-env.message = (message, data) => {
-    process.stdout.write(`${env.WA.NAME} ${message}`);
-
-    if (data) {
-        console.log(data);
-    } else {
-        console.log();
     }
 };
 

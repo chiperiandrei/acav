@@ -27,5 +27,5 @@ app.use(express.static(`${__dirname}/public`))
    .use('/', router);
 
 app.listen(env.WA.PORT, () => {
-    env.message('Listening on port ', env.WA.PORT);
+    console.log(`${env.WA.NAME} Listening on port ${env.WA.PORT}...`);
 });

@@ -122,17 +122,17 @@ main > .container {
 main > .container > .home-wrapper {
   padding: 15px;
 }
-main > .container > .account-wrapper {
+main > .container > .login-wrapper {
   padding: 30px;
   background-color: #e0e0e0;
 }
-main > .container > .account-wrapper > .account-container {
+main > .container > .login-wrapper > .login-container {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
   grid-gap: 30px;
 }
-main > .container > .account-wrapper > .account-container > .account {
+main > .container > .login-wrapper > .login-container > .login {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
@@ -140,15 +140,15 @@ main > .container > .account-wrapper > .account-container > .account {
   padding: 15px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
 }
-main > .container > .account-wrapper > .account-container > .account > h2 {
+main > .container > .login-wrapper > .login-container > .login > h2 {
   font-family: "Alata", sans-serif;
   text-transform: uppercase;
   font-size: 1.3em;
 }
-main > .container > .account-wrapper > .account-container > .account > form {
+main > .container > .login-wrapper > .login-container > .login > form {
   text-align: center;
 }
-main > .container > .account-wrapper > .account-container > .account > form > .form-container {
+main > .container > .login-wrapper > .login-container > .login > form > .form-container {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
@@ -156,20 +156,18 @@ main > .container > .account-wrapper > .account-container > .account > form > .f
   grid-gap: 15px;
   margin: 15px 0;
 }
-main > .container > .account-wrapper > .account-container > .account > form > .form-container label {
+main > .container > .login-wrapper > .login-container > .login > form > .form-container label {
   text-transform: uppercase;
   text-align: left;
-  user-select: none;
-  cursor: pointer;
 }
-main > .container > .account-wrapper > .account-container > .account > form > .form-container input[type=email], main > .container > .account-wrapper > .account-container > .account > form > .form-container input[type=password] {
+main > .container > .login-wrapper > .login-container > .login > form > .form-container input#email, main > .container > .login-wrapper > .login-container > .login > form > .form-container input#password {
   border-color: #e0e0e0;
 }
-main > .container > .account-wrapper > .account-container > .account > form > .error-message {
+main > .container > .login-wrapper > .login-container > .login > form > .error-message {
   color: #d32f2f;
   padding-bottom: 10px;
 }
-main > .container > .account-wrapper > .account-container > .account > form > .button-submit {
+main > .container > .login-wrapper > .login-container > .login > form > .button-submit {
   background-color: #bdbdbd;
   text-transform: uppercase;
   font-weight: 700;
