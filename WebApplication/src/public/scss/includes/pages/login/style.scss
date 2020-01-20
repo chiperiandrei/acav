@@ -1,17 +1,17 @@
 @import "../../colors";
 
 & {
-  & > .login-wrapper {
+  & > .account-wrapper {
     padding: 30px;
     background-color: $login-wrapper-bg-color;
 
-    & > .login-container {
+    & > .account-container {
       display: grid;
       grid-template-columns: auto 1fr ;
       grid-template-rows: 1fr;
       grid-gap: 30px;
 
-      & > .login {
+      & > .account {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
@@ -38,9 +38,11 @@
             label {
               text-transform: uppercase;
               text-align: left;
+              user-select: none;
+              cursor: pointer;
             }
 
-            input#email, input#password {
+            input[type="email"], input[type="password"] {
               border-color: $color2;
             }
           }
