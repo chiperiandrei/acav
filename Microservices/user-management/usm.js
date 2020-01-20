@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql')
+const mysql = require('mysql');
 const app = express();
 const router = express.Router();
 const REST_PATH = '/api/ums';
@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
     database: process.env.DATABASE
 });
 
-const bcrypt = require('bcrypt');
+var md5 = require('md5');
 const tokenGenerator = function (email, password) {
     var token = '';
     for (var i = 0; i < email.length; i++) {
@@ -22,7 +22,7 @@ const tokenGenerator = function (email, password) {
         token += password.charAt(i);
     }
     return token;
-}
+};
 
 connection.connect();
 
@@ -30,7 +30,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 router.post(REST_PATH + '/register', (req, res) => {
     const email = req.body.email;
-    const password = bcrypt.hashSync(req.body.password, 10);
+    const password = md5(req.body.password);
     const token = tokenGenerator(email, password);
     var sql = `INSERT INTO users (usertoken, email, password) VALUES ('${token}','${email}', '${password}')`;
     connection.query(sql, function (err, result) {
@@ -55,13 +55,13 @@ router.post(REST_PATH + '/login', (req, res) => {
         'SELECT * FROM users WHERE email = ?',
         [email], (error, results, fields) => {
             if (results.length === 1) {
-                if (bcrypt.compareSync(password, results[0].password)) {
+                if (md5(password) === results[0].password) {
                     res.json({
                         token: results[0].usertoken
                     });
                 } else {
                     res.json({
-                        "message": "Password incorrect"
+                        "message": "Incorrect password"
                     });
                 }
 
@@ -77,9 +77,9 @@ router.post(REST_PATH + '/update-spotify-token', (req, res) => {
     const usertoken = req.body.usertoken;
     let sql = 'UPDATE users set spotifyToken=? WHERE usertoken=?';
 
-    let data = [spotifyToken, usertoken]
+    let data = [spotifyToken, usertoken];
     connection.query(sql, data, (error, results, fields) => {
-        if (results.affectedRows == 0) {
+        if (results.affectedRows === 0) {
             res.status(404).send({
                 "message": "Token incorrect!"
             })

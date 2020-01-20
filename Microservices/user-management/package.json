@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.7",
     "express": "^4.17.1",
+    "md5": "^2.2.1",
     "mysql": "^2.17.1",
     "nodemon": "^2.0.2",
     "request": "^2.88.0"
