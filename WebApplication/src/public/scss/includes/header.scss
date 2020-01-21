@@ -70,7 +70,6 @@
       font-family: 'Alata', sans-serif;
 
       a {
-
         color: $text-color1;
         position: relative;
 
@@ -121,6 +120,36 @@
         &:hover {
           border-color: $text-color1;
         }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  & {
+    height: $header-height + 40px;
+
+    & > .container {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      justify-content: center;
+
+      & > .logo > a {
+        grid-template-columns: auto auto;
+
+        span {
+          &:first-child {
+            text-align: right;
+          }
+
+          &:nth-child(2):before {
+            display: none;
+          }
+        }
+      }
+
+      & > .menu {
+        // justify-self: center;
       }
     }
   }

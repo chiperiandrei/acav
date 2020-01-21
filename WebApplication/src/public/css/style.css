@@ -198,6 +198,25 @@ header > .container > .menu .user {
 header > .container > .menu .user:hover {
   border-color: #212121;
 }
+@media only screen and (max-width: 850px) {
+  header {
+    height: 120px;
+  }
+  header > .container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    justify-content: center;
+  }
+  header > .container > .logo > a {
+    grid-template-columns: auto auto;
+  }
+  header > .container > .logo > a span:first-child {
+    text-align: right;
+  }
+  header > .container > .logo > a span:nth-child(2):before {
+    display: none;
+  }
+}
 
 main > .container {
   display: grid;
@@ -282,6 +301,21 @@ main > .container > .home-wrapper > .spotify-wrapper .artists .artists-grid .art
   text-transform: uppercase;
   font-size: 0.8em;
 }
+@media only screen and (max-width: 1100px) {
+  main > .container > .home-wrapper > .spotify-wrapper .artists .artists-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media only screen and (max-width: 850px) {
+  main > .container > .home-wrapper > .spotify-wrapper .artists .artists-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media only screen and (max-width: 600px) {
+  main > .container > .home-wrapper > .spotify-wrapper .artists .artists-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
 main > .container > .account-wrapper {
   padding: 30px;
   background-color: #e0e0e0;
@@ -337,6 +371,11 @@ main > .container > .account-wrapper > .account-container > .account > form > .b
 }
 main > .container > .contact-wrapper {
   padding: 15px;
+}
+@media only screen and (max-width: 850px) {
+  main {
+    padding-top: 40px;
+  }
 }
 
 footer > .container {

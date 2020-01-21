@@ -1,3 +1,5 @@
+@import 'variables';
+
 & {
   & > .container {
     display: grid;
@@ -8,5 +10,11 @@
     @import 'pages/home/style';
     @import 'pages/login/style';
     @import 'pages/contact/style';
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  & {
+    padding-top: 40px;
   }
 }
