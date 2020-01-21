@@ -14,11 +14,10 @@ router.get('/login', (req, res) => {
     const state = crypto.randomBytes(64).toString('hex');
     res.cookie(env.SAS.SPOTIFY.STATE_KEY, state);
 
-    console.log(req.query);
-
     // redirect to ACAV WA
     if (req.query) {
         req.session.redirectUri = req.query.redirectUri;
+        req.session.token = req.query.token;
     }
 
     // redirect from Spotify API
@@ -42,6 +41,7 @@ router.get('/callback', (req, res) => {
     const storedState = req.cookies ? req.cookies[env.SAS.SPOTIFY.STATE_KEY] : null;
     const redirectUri = `${env.SAS.URI}/spotify/callback`;
     const responseUri = req.session.redirectUri;
+    const wa = { token: req.session.token };
 
     if (state === null || state !== storedState) {
         res.redirect(responseUri + '/#' + querystring.stringify({
@@ -62,27 +62,34 @@ router.get('/callback', (req, res) => {
             },
             json: true
         };
-        request.post(authOptions, function(error, response, body) {
+        request.post(authOptions, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 const refresh_token = body.refresh_token;
+                const access_token = body.access_token;
 
                 env.log(
                     'GET',
                     `${env.SAS.URI}/spotify/callback`,
                     {
-                        access_token: body.access_token.slice(0, 15) + ' [...]',
+                        access_token: access_token.slice(0, 15) + ' [...]',
                         refresh_token: refresh_token.slice(0, 15) + ' [...]'
                     },
                     true
                 );
 
                 request.post(responseUri, {
-                    json: { token: refresh_token }
+                    json: {
+                        spotify: {
+                            token: access_token,
+                        },
+                        wa
+                    }
                 }, (error, response, body) => {
                     if (!error && response.statusCode === 200) {
                         env.log('POST', responseUri, { token: refresh_token.slice(0, 15) + ' [...]' }, false);
-                        // res.redirect(responseUri + '/confirm');
-                        res.sendStatus(200);
+                        res.redirect(responseUri + '/?' + querystring.stringify({
+                            wa: wa.token
+                        }));
                     }
                 });
                 // res.status(200).json({ token: refresh_token });
@@ -96,30 +103,31 @@ router.get('/callback', (req, res) => {
 });
 
 // requesting access token from refresh token
-// router.get('/token', function(req, res) {
-//     const refresh_token = req.body.refresh_token;
-//     console.log(refresh_token);
-//     return res.status(200).json({ token: 'todo' });
-//
-//     const buffer = Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET);
-//     const authOptions = {
-//         url: 'https://accounts.spotify.com/api/token',
-//         headers: { 'Authorization': `Basic ${buffer.toString('base64')}` },
-//         form: {
-//             grant_type: 'refresh_token',
-//             refresh_token: refresh_token
-//         },
-//         json: true
-//     };
-//     request.post(authOptions, function(error, response, body) {
-//         if (!error && response.statusCode === 200) {
-//             const access_token = body.access_token;
-//             res.send({
-//                 'access_token': access_token
-//             });
-//         }
-//     });
-// });
+router.get('/token', (req, res) => {
+    const refresh_token = req.body.refresh_token;
+    console.log(refresh_token);
+
+    // return res.status(200).json({ token: 'todo' });
+    //
+    // const buffer = Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET);
+    // const authOptions = {
+    //     url: 'https://accounts.spotify.com/api/token',
+    //     headers: { 'Authorization': `Basic ${buffer.toString('base64')}` },
+    //     form: {
+    //         grant_type: 'refresh_token',
+    //         refresh_token: refresh_token
+    //     },
+    //     json: true
+    // };
+    // request.post(authOptions, function(error, response, body) {
+    //     if (!error && response.statusCode === 200) {
+    //         const access_token = body.access_token;
+    //         res.send({
+    //             'access_token': access_token
+    //         });
+    //     }
+    // });
+});
 
 // getting playlists
 // app.get('/get_playlist', function(req, res) {
