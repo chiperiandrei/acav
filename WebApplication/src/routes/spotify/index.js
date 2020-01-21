@@ -146,4 +146,72 @@ router.get('/playlists', isAuthorized, (req, res) => {
     }
 });
 
+router.get('/songs', isAuthorized, (req, res) => {
+    env.log('GET', `${env.WA.URI}/spotify/songs`);
+
+    const tokenUri = `${env.WA.URI}/connect/spotify/token`;
+    const sess = req.session;
+
+    if (sess.user.spotify) {
+        request.post(tokenUri, {
+            json: { refresh_token: sess.user.spotify.refresh_token }
+        }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                sess.user.spotify.token = body.token;
+
+                const token = sess.user.spotify.token;
+
+                const renderData = {
+                    email: sess.user.email,
+                    spotify: {
+                        href: sess.user.spotify.href,
+                        name: sess.user.spotify.name,
+                        picture: sess.user.spotify.picture
+                    }
+                };
+
+                let temporary = [];
+
+                spotifyApi.setAccessToken(token);
+
+                spotifyApi.getMySavedTracks({ limit: 50 })
+                    .then(data => {
+                       const d = data.body;
+
+                       for (const i of d.items) {
+                           const song = {
+                               id: i.track.id,
+                               name: i.track.name,
+                               artists: [],
+                               preview: i.track.preview_url
+                           };
+
+                           for (const j of i.track.artists) {
+                               song.artists.push({
+                                   id: j.id,
+                                   name: j.name
+                               });
+                               // maximum 3 artists per song
+                               if (song.artists.length > 2) {
+                                   break;
+                               }
+                           }
+
+                           temporary.push(song);
+                       }
+
+                       renderData.spotify.songs = temporary;
+                       console.log(renderData.spotify.songs);
+
+                       res.render('home', renderData);
+                    }, err => {
+                        console.error(err);
+                    });
+            }
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
 module.exports = router;

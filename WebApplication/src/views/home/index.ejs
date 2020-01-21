@@ -24,6 +24,9 @@
         </div>
         <h3 class="upper-hr"><i class="far fa-star"></i> View your favorites:</h3>
         <div class="buttons">
+            <a href="/spotify/songs" class="button button-opaque15 hover-none">
+                <span>Songs</span>
+            </a>
             <a href="/spotify/artists" class="button button-opaque15 hover-none">
                 <span>Artists</span>
             </a>
@@ -58,13 +61,36 @@
             <h3>Your favorite playlists:</h3>
             <div class="playlists-grid">
                 <% locals.spotify.playlists.forEach(playlist => { %>
-                    <div class="playlist">
-                        <div class="image">
-                            <img src="<%= playlist.picture %>">
-                        </div>
-                        <div class="info">
-                            <a href="<%= playlist.href %>" class="name" target="_blank"><%= playlist.name %></a>
-                        </div>
+                <div class="playlist">
+                    <div class="image">
+                        <img src="<%= playlist.picture %>">
+                    </div>
+                    <div class="info">
+                        <a href="<%= playlist.href %>" class="name" target="_blank"><%= playlist.name %></a>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+        <% } %>
+        <% if (locals.spotify.songs) { %>
+        <div class="songs">
+            <h3>Your favorite songs:</h3>
+            <div class="songs-grid">
+                <% let i = 1; locals.spotify.songs.forEach(song => { %>
+                    <div class="song">
+                        <span class="no"><%= i %></span>
+                        <span class="artists">
+                            <% i++; song.artists.forEach(artists => { %>
+                                <span class="artist"><%= artists.name %></span>
+                            <% }); %>
+                        </span>
+                        <span class="name"><%= song.name %></span>
+                        <% if (song.preview) { %>
+                        <audio class="audio" controls>
+                            <source src="<%= song.preview %>" type="audio/mpeg">
+                        </audio>
+                        <% } %>
                     </div>
                 <% }); %>
             </div>

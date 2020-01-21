@@ -134,6 +134,91 @@
         }
       }
     }
+
+    .songs {
+      h3 {
+        margin-bottom: 15px;
+      }
+
+      .songs-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+
+        .song {
+          display: flex;
+          position: relative;
+          width: 100%;
+          background-color: $color1;
+          padding: 10px 15px;
+          margin: 10px auto;
+          box-shadow: 0 0 5px rgba(0, 0, 0, .15);
+          align-items: center;
+
+          &:first-child {
+            margin-top: 0;
+          }
+
+          &:last-child {
+            border-color: transparent;
+          }
+
+          .no {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 40px;
+            background-color: darken($color3, 40%);
+            color: $color1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 100;
+            font-size: .9em;
+
+            &:after {
+              content: '.';
+            }
+          }
+
+          .artists {
+            display: flex;
+            margin-left: 40px;
+            font-family: "Alata", sans-serif;
+
+            .artist {
+              margin-right: 5px;
+
+              &:after {
+                content: ',';
+              }
+
+              &:last-child {
+                margin-right: 0;
+
+                &:after {
+                  content: ' ';
+                }
+              }
+            }
+          }
+
+          .name {
+            display: flex;
+            margin-top: 2px;
+
+            &:before {
+              padding: 0 5px;
+              content: '⎯';
+            }
+          }
+
+          .audio {
+            align-self: end;
+            margin-left: auto;
+            outline: none;
+          }
+        }
+      }
+    }
   }
 }
 
