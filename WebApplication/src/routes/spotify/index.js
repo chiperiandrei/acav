@@ -201,7 +201,6 @@ router.get('/songs', isAuthorized, (req, res) => {
                        }
 
                        renderData.spotify.songs = temporary;
-                       console.log(renderData.spotify.songs);
 
                        res.render('home', renderData);
                     }, err => {

@@ -11,7 +11,12 @@
                 Contact <i class="far fa-envelope"></i>
             </a>
             <% if (locals.email) { %>
-            <span class="user"><%= locals.email %></span>
+            <span id="user">
+                <%= locals.email %>
+                <div id="menu">
+                    <a href="/disconnect">Log out</a>
+                </div>
+            </span>
             <% } %>
         </nav>
     </div>

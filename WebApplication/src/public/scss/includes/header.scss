@@ -106,7 +106,7 @@
         }
       }
 
-      .user {
+      #user {
         margin-left: 23px;
         cursor: pointer;
         padding: 7px 12px;
@@ -116,8 +116,48 @@
         font-weight: 400;
         font-family: 'Lato', sans-serif;
         transition: border-color 200ms ease-in;
+        position: relative;
+
+        &.active {
+          border-radius: 0;
+          border-color: $text-color1;
+          border-bottom-color: transparent;
+        }
+
+        #menu {
+          position: absolute;
+          left: -1px; right: -1px; bottom: 20%;
+          margin-top: 40px;
+          transform: translate(0, 100%);
+          border: 1px solid $text-color1;
+          background-color: $color2;
+          border-top-color: transparent;
+          display: none;
+          transition: all 200ms ease;
+          opacity: 0;
+
+          a {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+
+            &:after {
+              display: none;
+            }
+          }
+
+          &.active {
+            display: flex;
+          }
+
+          &.ready {
+            opacity: 1;
+            bottom: 0;
+          }
+        }
 
         &:hover {
+          border-radius: 0;
           border-color: $text-color1;
         }
       }

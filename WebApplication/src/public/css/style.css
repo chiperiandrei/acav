@@ -185,7 +185,7 @@ header > .container > .menu a:hover {
 header > .container > .menu a:hover:after {
   opacity: 1;
 }
-header > .container > .menu .user {
+header > .container > .menu #user {
   margin-left: 23px;
   cursor: pointer;
   padding: 7px 12px;
@@ -195,8 +195,44 @@ header > .container > .menu .user {
   font-weight: 400;
   font-family: "Lato", sans-serif;
   transition: border-color 200ms ease-in;
+  position: relative;
 }
-header > .container > .menu .user:hover {
+header > .container > .menu #user.active {
+  border-radius: 0;
+  border-color: #212121;
+  border-bottom-color: transparent;
+}
+header > .container > .menu #user #menu {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: 20%;
+  margin-top: 40px;
+  transform: translate(0, 100%);
+  border: 1px solid #212121;
+  background-color: #e0e0e0;
+  border-top-color: transparent;
+  display: none;
+  transition: all 200ms ease;
+  opacity: 0;
+}
+header > .container > .menu #user #menu a {
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+}
+header > .container > .menu #user #menu a:after {
+  display: none;
+}
+header > .container > .menu #user #menu.active {
+  display: flex;
+}
+header > .container > .menu #user #menu.ready {
+  opacity: 1;
+  bottom: 0;
+}
+header > .container > .menu #user:hover {
+  border-radius: 0;
   border-color: #212121;
 }
 @media only screen and (max-width: 850px) {
