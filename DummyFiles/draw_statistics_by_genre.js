@@ -28,3 +28,14 @@ function drawStatisticsByGenre(gen, no_of_people) {
   }
 
 }
+butonpng = document.getElementById('save-png');
+// butonsvg = document.getElementById('save-svg');
+
+var dwnbutonpng = document.getElementById('save-png').addEventListener("click", function (e) {
+  let x = canvas.toDataURL('image/png', 1.0);
+  butonpng.href = x;
+})
+// var dwnbutonsvg = document.getElementById('save-svg').addEventListener("click", function (e) {
+//   let x = canvas.toDataURL('image/svg', 1.0);
+//   butonsvg.href = x;
+// })
