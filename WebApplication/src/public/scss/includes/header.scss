@@ -66,6 +66,61 @@
     & > .menu {
       justify-self: end;
       padding-right: 15px;
+      font-family: 'Alata', sans-serif;
+
+      a {
+
+        color: $text-color1;
+        position: relative;
+
+        &.active {
+          &:after {
+            opacity: 1;
+          }
+        }
+
+        & i {
+          margin-left: 3px;
+          font-size: .9em;
+        }
+
+        &:after {
+          content: '';
+          display: block;
+          position: absolute;
+          background-color: $text-color1;
+          bottom: -3px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          opacity: 0;
+          transition: opacity 200ms ease-in;
+        }
+
+        &:hover {
+          text-decoration: none;
+
+          &:after {
+            opacity: 1;
+          }
+        }
+      }
+
+      .user {
+        margin-left: 23px;
+        cursor: pointer;
+        padding: 7px 12px;
+        background-color: rgba(0, 0, 0, .1);
+        border: 1px solid transparent;
+        border-radius: 3px;
+        font-weight: 400;
+        font-family: 'Lato', sans-serif;
+        transition: border-color 200ms ease-in;
+
+        &:hover {
+          border-color: $text-color1;
+        }
+      }
     }
   }
 }

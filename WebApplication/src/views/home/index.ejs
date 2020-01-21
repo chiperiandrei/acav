@@ -1,5 +1,29 @@
+<% if (!locals.spotify) { %>
 <div class="home-wrapper">
-    <a href="/connect/spotify" class="button button-spotify"><i class="fab fa-spotify"></i> Connect with Spotify</a>
+    <div class="spotify-wrapper">
+        <div class="buttons">
+        <a href="/connect/spotify" class="button button-spotify hover-none">
+            <i class="fab fa-spotify"></i>
+            <span>Connect with Spotify</span>
+        </a>
+        </div>
+    </div>
 </div>
+<% } else { %>
+<div class="home-wrapper">
+    <div class="spotify-wrapper">
+        <div class="connected-as"><i class="fab fa-spotify"></i> Connected as: </div>
+        <div class="buttons">
+            <a href="<%= locals.spotify.href %>" class="button button-spotify hover-none" target="_blank">
+                <img src="<%= locals.spotify.picture %>" alt="avatar">
+                <span class="name"><%= locals.spotify.name %></span>
+            </a>
+            <a href="/disconnect/spotify" class="button button-opaque15 hover-none">
+                <span>Disconnect</span>
+            </a>
+        </div>
+    </div>
+</div>
+<% } %>
 
 <!--<a href="/token" class="button">Token</a>-->

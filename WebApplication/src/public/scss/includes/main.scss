@@ -5,7 +5,8 @@
     max-width: 1400px;
     margin: 0 auto;
 
-    @import "pages/home/style";
-    @import "pages/login/style";
+    @import 'pages/home/style';
+    @import 'pages/login/style';
+    @import 'pages/contact/style';
   }
 }

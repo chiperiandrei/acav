@@ -1,11 +1,18 @@
 <div class="container">
     <div class="logo">
-        <a href="">
+        <a href="/">
             <span>ACAV</span>
             <span>Audio Content Advanced Visualizer</span>
         </a>
     </div>
     <div class="menu">
-        Menu
+        <nav>
+            <a href="/contact" <% if (locals.currentPage === 'contact') { %>class="active"<% } %>>
+                Contact <i class="far fa-envelope"></i>
+            </a>
+            <% if (locals.email) { %>
+            <span href="/profile" class="user"><%= locals.email %></span>
+            <% } %>
+        </nav>
     </div>
 </div>

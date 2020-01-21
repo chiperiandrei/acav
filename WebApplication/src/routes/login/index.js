@@ -29,16 +29,21 @@ router.post('/', async (req, res) => {
                     env.log('POST', requestUri, body, true);
 
                     if (body && body.token) {
-                        req.session.user = {
+                        req.session.wa = {
                             token: body.token,
                             date: new Date()
                         };
+                        req.session.user = {
+                            email
+                        };
                         res.redirect(redirectUri);
                     } else {
-                        res.render('login', {message: body.message});
+                        res.render('login', { message: body.message });
                     }
                 }
             });
+        } else {
+            res.render('login', { message: 'Incorrect password'});
         }
     }
 });

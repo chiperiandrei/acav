@@ -1,3 +1,31 @@
+@import '../../colors';
+
 & > .home-wrapper {
   padding: 15px;
+
+  & > .spotify-wrapper {
+    display: grid;
+    padding: 15px;
+    border: 1px solid $text-color1;
+    min-height: 120px;
+    align-items: center;
+
+    .connected-as {
+      font-size: 1.2em;
+      padding-bottom: 15px;
+    }
+
+    .buttons {
+      display: flex;
+
+      & > * {
+        margin-left: 10px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+      // grid-template-columns: auto auto 1fr;
+    }
+  }
 }

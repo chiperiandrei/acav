@@ -3,36 +3,73 @@
 const router = require('express').Router();
 const querystring = require('querystring');
 
+const SpotifyWebApi = require('spotify-web-api-node');
+
+const spotifyApi = new SpotifyWebApi();
+
 const env = require('../../../environment');
-const { isAuthorized } = require('../../../session');
+const { isAuthorized, storage } = require('../../../session');
 
 router.get('/', isAuthorized, (req, res) => {
     env.log('GET', `${env.WA.URI}/connect/spotify`);
 
-    const redirectUri = `${env.WA.URI}/connect/spotify`;
-    const requestUri = `${env.SAS.URI}/spotify/login`;
+    if (!req.session.user.spotify) {
+        const requestUri = `${env.SAS.URI}/spotify/login`;
+        const redirectUri = `${env.WA.URI}/connect/spotify`;
 
-    env.log('GET', requestUri, { redirectUri }, false);
+        const data = {
+            redirectUri,
+            token: req.session.wa.token
+        };
 
-    res.redirect(requestUri + '?' + querystring.stringify({
-        redirectUri
-    }));
+        env.log('GET', requestUri, data, false);
+
+        storage.setItem(req.session.wa.token, JSON.stringify({
+            wa: req.session.wa,
+            user: req.session.user
+        }));
+
+        res.redirect(requestUri + '?' + querystring.stringify(data));
+    } else {
+        res.redirect('/');
+    }
 });
 
-// router.get('/confirm', (req, res, next) => {
-//     env.log('GET [MIDDLEWARE]', `${env.WA.URI}/connect/spotify/confirm`);
-//     console.log(req.session);
-//     next();
-// }, (req, res) => {
-//     env.log('GET', `${env.WA.URI}/connect/spotify/confirm`);
-//     res.render('home');
-// });
 
-router.post('/', (req, res) => {
-    const token = req.body.token;
+router.post('/', isAuthorized, (req, res) => {
+    const token = req.body.spotify.token;
+
     env.log('POST', `${env.WA.URI}/connect/spotify`, { token: token.slice(0, 15) + ' [...]' }, true);
 
-    res.sendStatus(200);
+    req.session.user.spotify = { token };
+
+    spotifyApi.setAccessToken(token);
+
+    spotifyApi.getMe()
+        .then((data) => {
+            // console.log(data.body);
+            const d = data.body;
+
+            req.session.user.spotify.id = d.id;
+            req.session.user.spotify.href = d.external_urls.spotify;
+            req.session.user.spotify.name = d.display_name;
+            req.session.user.spotify.picture = d.images[0].url;
+            req.session.user.spotify.product = d.product;
+
+            storage.setItem(req.session.wa.token, JSON.stringify({
+                wa: req.session.wa,
+                user: req.session.user
+            }));
+
+            res.end();
+        }, function(err) {
+            console.error(err);
+            res.end();
+        });
 });
+
+// router.get('/token', isAuthorized, (req, res) => {
+//     env.log('GET', `${env.WA.URI}/connect/spotify/token`);
+// });
 
 module.exports = router;
