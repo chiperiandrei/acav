@@ -5,11 +5,7 @@ const querystring = require('querystring');
 const request = require('request');
 
 const SpotifyWebApi = require('spotify-web-api-node');
-const spotifyApi = new SpotifyWebApi({
-    clientId: '8e4566423d5940e9a8c13203cd8de788',
-    clientSecret: 'bcd3ed3db9444dd8aa18a5be6feb15e0',
-    redirectUri: 'http://localhost:3000/api/sas/spotify/callback'
-});
+const spotifyApi = new SpotifyWebApi();
 
 const env = require('../../../environment');
 const { isAuthorized, storage } = require('../../../session');

@@ -27,6 +27,9 @@
             <a href="/spotify/artists" class="button button-opaque15 hover-none">
                 <span>Artists</span>
             </a>
+            <a href="/spotify/playlists" class="button button-opaque15 hover-none">
+                <span>Playlists</span>
+            </a>
         </div>
         <% if (locals.spotify.artists) { %>
         <div class="artists">
@@ -46,6 +49,23 @@
                         </ul>
                     </div>
                 </div>
+                <% }); %>
+            </div>
+        </div>
+        <% } %>
+        <% if (locals.spotify.playlists) { %>
+        <div class="playlists">
+            <h3>Your favorite playlists:</h3>
+            <div class="playlists-grid">
+                <% locals.spotify.playlists.forEach(playlist => { %>
+                    <div class="playlist">
+                        <div class="image">
+                            <img src="<%= playlist.picture %>">
+                        </div>
+                        <div class="info">
+                            <a href="<%= playlist.href %>" class="name" target="_blank"><%= playlist.name %></a>
+                        </div>
+                    </div>
                 <% }); %>
             </div>
         </div>
