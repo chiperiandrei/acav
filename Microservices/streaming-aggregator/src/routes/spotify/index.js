@@ -23,7 +23,7 @@ router.get('/login', (req, res) => {
     // redirect from Spotify API
     const redirectUri = `${env.SAS.URI}/spotify/callback`;
 
-    const scope = 'user-read-private user-read-email user-follow-read';
+    const scope = 'user-read-private user-read-email user-library-read user-follow-read';
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({
         response_type: 'code',
         client_id: env.SAS.SPOTIFY.CLIENT_ID,
