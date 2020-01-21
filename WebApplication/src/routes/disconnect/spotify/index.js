@@ -3,9 +3,11 @@
 const router = require('express').Router();
 
 const env = require('../../../environment');
-const { isAuthorized, storage } = require('../../../session');
+const { isAuthorized } = require('../../../session');
 
 router.get('/', isAuthorized, (req, res) => {
+    env.log('GET', `${env.WA.URI}/disconnect/spotify`);
+
     delete req.session.user.spotify;
     res.redirect('/');
 });

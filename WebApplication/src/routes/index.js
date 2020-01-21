@@ -6,5 +6,6 @@ router.use('/contact', require('./contact'));
 router.use('/connect', require('./connect'));
 router.use('/disconnect', require('./disconnect'));
 router.use('/register', require('./register'));
+router.use('/spotify', require('./spotify'));
 
 module.exports = router;

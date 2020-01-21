@@ -8,6 +8,7 @@
   background-color: $header-bg-color;
   box-shadow: 0 0 20px rgba(0, 0, 0, .15);
   height: $header-height;
+  z-index: 1;
 
   & > .container {
     display: grid;

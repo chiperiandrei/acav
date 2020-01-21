@@ -5,14 +5,22 @@ const isAuthorized = (req, res, next) => {
     if (req.session.wa && req.session.user) {
         next();
     } else if (req.body && req.body.wa) {
-        const data = JSON.parse(storage.getItem(req.body.wa.token));
-        req.session.wa = data.wa;
-        req.session.user = data.user;
+        const key = req.body.wa.token;
+        const data = JSON.parse(storage.getItem(key));
+        if (data) {
+            req.session.wa = data.wa;
+            req.session.user = data.user;
+            storage.removeItem(key);
+        }
         next();
     } else if (req.query.wa) {
-        const data = JSON.parse(storage.getItem(req.query.wa));
-        req.session.wa = data.wa;
-        req.session.user = data.user;
+        const key = req.query.wa;
+        const data = JSON.parse(storage.getItem(key));
+        if (data) {
+            req.session.wa = data.wa;
+            req.session.user = data.user;
+            storage.removeItem(key);
+        }
         next();
     } else {
         res.redirect('/login');
