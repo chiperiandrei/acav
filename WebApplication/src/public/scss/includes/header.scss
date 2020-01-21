@@ -128,12 +128,13 @@
           position: absolute;
           left: -1px; right: -1px; bottom: 20%;
           margin-top: 40px;
-          transform: translate(0, 100%);
           border: 1px solid $text-color1;
+
           background-color: $color2;
           border-top-color: transparent;
           display: none;
           transition: all 200ms ease;
+          transform: translate(0, 100%);
           opacity: 0;
 
           a {

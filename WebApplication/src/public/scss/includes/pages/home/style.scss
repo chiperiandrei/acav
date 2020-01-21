@@ -145,7 +145,8 @@
         grid-template-columns: 1fr;
 
         .song {
-          display: flex;
+          display: grid;
+          grid-template-columns: auto auto 1fr;
           position: relative;
           width: 100%;
           background-color: $color1;
@@ -215,6 +216,7 @@
             align-self: end;
             margin-left: auto;
             outline: none;
+            height: 40px;
           }
         }
       }
@@ -264,6 +266,23 @@
       .playlists {
         .playlists-grid {
           grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .songs {
+        .songs-grid {
+          .song {
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto;
+
+            .audio {
+              width: 100%;
+              align-self: center;
+              grid-column-start: 1;
+              grid-column-end: 3;
+              padding-left: 35px;
+              margin-top: 10px;
+            }
+          }
         }
       }
     }

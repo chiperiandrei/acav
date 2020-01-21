@@ -208,12 +208,12 @@ header > .container > .menu #user #menu {
   right: -1px;
   bottom: 20%;
   margin-top: 40px;
-  transform: translate(0, 100%);
   border: 1px solid #212121;
   background-color: #e0e0e0;
   border-top-color: transparent;
   display: none;
   transition: all 200ms ease;
+  transform: translate(0, 100%);
   opacity: 0;
 }
 header > .container > .menu #user #menu a {
@@ -382,7 +382,8 @@ main > .container > .home-wrapper > .spotify-wrapper .songs .songs-grid {
   grid-template-columns: 1fr;
 }
 main > .container > .home-wrapper > .spotify-wrapper .songs .songs-grid .song {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
   position: relative;
   width: 100%;
   background-color: #fafafa;
@@ -443,6 +444,7 @@ main > .container > .home-wrapper > .spotify-wrapper .songs .songs-grid .song .a
   align-self: end;
   margin-left: auto;
   outline: none;
+  height: 40px;
 }
 @media only screen and (max-width: 1100px) {
   main > .container > .home-wrapper > .spotify-wrapper .artists .artists-grid {
@@ -462,6 +464,18 @@ main > .container > .home-wrapper > .spotify-wrapper .songs .songs-grid .song .a
 @media only screen and (max-width: 800px) {
   main > .container > .home-wrapper > .spotify-wrapper .playlists .playlists-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  main > .container > .home-wrapper > .spotify-wrapper .songs .songs-grid .song {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+  main > .container > .home-wrapper > .spotify-wrapper .songs .songs-grid .song .audio {
+    width: 100%;
+    align-self: center;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    padding-left: 35px;
+    margin-top: 10px;
   }
 }
 @media only screen and (max-width: 600px) {
