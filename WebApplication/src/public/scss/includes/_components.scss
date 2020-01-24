@@ -40,8 +40,11 @@
         span {
             margin-left: 5px;
 
+            &.avatar {
+                margin-right: 10px;
+            }
+
             &.name {
-                margin-left: 10px;
                 font-weight: 300;
             }
         }

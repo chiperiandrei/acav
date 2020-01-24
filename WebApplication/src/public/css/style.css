@@ -70,8 +70,10 @@ a:hover {
 .button.button-spotify span {
   margin-left: 5px;
 }
+.button.button-spotify span.avatar {
+  margin-right: 10px;
+}
 .button.button-spotify span.name {
-  margin-left: 10px;
   font-weight: 300;
 }
 .button.button-spotify img {

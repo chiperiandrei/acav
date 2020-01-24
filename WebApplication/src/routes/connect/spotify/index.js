@@ -58,8 +58,10 @@ router.post('/', isAuthorized, (req, res) => {
             sess.user.spotify.id = d.id;
             sess.user.spotify.href = d.external_urls.spotify;
             sess.user.spotify.name = d.display_name;
-            sess.user.spotify.picture = d.images[0].url;
             sess.user.spotify.product = d.product;
+            if (d.images.length > 0) {
+                sess.user.spotify.picture = d.images[0].url;
+            }
 
             // maintaining the current session alive
             storage.setItem(sess.wa.token, JSON.stringify({

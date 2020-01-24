@@ -1,4 +1,5 @@
-<% if (!locals.spotify) { %>
+<% const spotify = locals.spotify %>
+<% if (!spotify) { %>
 <div class="home-wrapper">
     <div class="spotify-wrapper">
         <div class="buttons">
@@ -14,9 +15,11 @@
     <div class="spotify-wrapper">
         <h2 class="connected-as"><i class="fab fa-spotify"></i> Connected as: </h2>
         <div class="buttons">
-            <a href="<%= locals.spotify.href %>" class="button button-spotify hover-none" target="_blank">
-                <img src="<%= locals.spotify.picture %>" alt="avatar">
-                <span class="name"><%= locals.spotify.name %></span>
+            <a href="<%= spotify.href %>" class="button button-spotify hover-none" target="_blank">
+                <% if (spotify.picture) { %>
+                <img src="<%= spotify.picture %>" alt="avatar" class="avatar">
+                <% } %>
+                <span class="name"><%= spotify.name %></span>
             </a>
             <a href="/disconnect/spotify" class="button button-opaque15 hover-none">
                 <span>Disconnect</span>
@@ -34,11 +37,11 @@
                 <span>Playlists</span>
             </a>
         </div>
-        <% if (locals.spotify.artists) { %>
+        <% if (spotify.artists) { %>
         <div class="artists">
             <h3>Your favorite artists:</h3>
             <div class="artists-grid">
-                <% locals.spotify.artists.forEach(artist => { %>
+                <% spotify.artists.forEach(artist => { %>
                 <div class="artist">
                     <div class="image">
                         <img src="<%= artist.picture %>">
@@ -56,11 +59,11 @@
             </div>
         </div>
         <% } %>
-        <% if (locals.spotify.playlists) { %>
+        <% if (spotify.playlists) { %>
         <div class="playlists">
             <h3>Your favorite playlists:</h3>
             <div class="playlists-grid">
-                <% locals.spotify.playlists.forEach(playlist => { %>
+                <% spotify.playlists.forEach(playlist => { %>
                 <div class="playlist">
                     <div class="image">
                         <img src="<%= playlist.picture %>">
@@ -73,11 +76,11 @@
             </div>
         </div>
         <% } %>
-        <% if (locals.spotify.songs) { %>
+        <% if (spotify.songs) { %>
         <div class="songs">
             <h3>Your favorite songs:</h3>
             <div class="songs-grid">
-                <% let i = 1; locals.spotify.songs.forEach(song => { %>
+                <% let i = 1; spotify.songs.forEach(song => { %>
                     <div class="song">
                         <span class="no"><%= i %></span>
                         <span class="artists">
