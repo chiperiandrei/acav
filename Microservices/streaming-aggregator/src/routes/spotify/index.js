@@ -7,6 +7,11 @@ const querystring = require('querystring');
 
 const env = require('../../environment');
 
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi();
+
+const fs = require('fs');
+
 // application requests authorization
 router.get('/login', (req, res) => {
     env.log('GET', `${env.SAS.URI}/spotify/login`);
@@ -17,6 +22,7 @@ router.get('/login', (req, res) => {
     // redirect for ACAV WA
     if (req.query) {
         req.session.redirectUri = req.query.redirectUri;
+        req.session.email = req.query.email;
         req.session.token = req.query.token;
     }
 
@@ -78,6 +84,7 @@ router.get('/callback', (req, res) => {
                     true
                 );
 
+                // Request to ACAV WA, data for Front-end
                 request.post(responseUri, {
                     json: {
                         spotify: {
@@ -101,6 +108,108 @@ router.get('/callback', (req, res) => {
                             wa: wa.token
                         }));
                     }
+                });
+
+                // Request to Spotify, data for Profiling
+                spotifyApi.setAccessToken(access_token);
+
+
+
+                spotifyApi.getMySavedTracks({ limit: 50 })
+                .then(data => {
+                    const d = data.body;
+                    let result = [];
+
+                    for (const i of d.items) {
+                        const t = i.track;
+
+                        const track = {
+                            album: {},
+                            artists: [],
+                            available_markets: t.available_markets,
+                            disc_number: t.disc_number,
+                            duration_ms: t.duration_ms,
+                            explicit: t.explicit,
+                            id: t.id,
+                            is_local: t.is_local,
+                            name: t.name,
+                            popularity: t.popularity,
+                            preview_url: t.preview_url,
+                            track_number: t.track_number,
+                            url: undefined
+                        };
+                        if (t.external_urls) {
+                            track.url = t.external_urls.spotify;
+                        }
+
+                        const album = {
+                            album_type: t.album.album_type,
+                            artists: [],
+                            available_markets: t.album.available_markets,
+                            id: t.album.id,
+                            images: t.album.images,
+                            name: t.album.name,
+                            release_date: t.album.release_date,
+                            release_date_precision: t.album.release_date_precision,
+                            total_tracks: t.album.total_tracks,
+                            url: undefined
+                        };
+                        if (t.album.external_urls) {
+                            album.url = t.album.external_urls.spotify
+                        }
+
+                        for (const a of t.album.artists) {
+                            const artist = {
+                                id: a.id,
+                                name: a.name,
+                                url: undefined
+                            };
+                            if (a.external_urls) {
+                                artist.url = a.external_urls.spotify
+                            }
+                            album.artists.push(artist)
+                        }
+
+                        track.album = album;
+
+                        for (const a of t.artists) {
+                            const artist = {
+                                id: a.id,
+                                name: a.name,
+                                url: undefined
+                            };
+                            if (a.external_urls) {
+                                artist.url = a.external_urls.spotify
+                            }
+                            track.artists.push(artist)
+                        }
+
+                        result.push(track);
+                    }
+
+                    return result;
+                }, err => {
+                    console.error(err);
+
+                }).then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        spotifyApi.getArtist(data[i].artists[0].id)
+                        .then(new_data => {
+                            data[i].genres = new_data.body.genres;
+                            if (i === data.length - 1) {
+                                // [TODO:] Send Your Request to Paul!
+                                return data;
+                            }
+                        }, err => {
+                            console.log(err);
+                        }).then(data => {
+                            console.log(data);
+                        }, err => {
+                            console.log(err)
+                        });
+                    }
+                }, err => {
+                    console.error(err);
                 });
             } else {
                 env.message('Login failed!');
