@@ -27,7 +27,7 @@ const tokenGenerator = function (email, password) {
 connection.connect();
 
 app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
 router.post(REST_PATH + '/register', (req, res) => {
     const email = req.body.email;
     const password = md5(req.body.password);
@@ -83,8 +83,7 @@ router.put(REST_PATH + '/update-spotify-token', (req, res) => {
             res.status(404).send({
                 "message": "Token incorrect!"
             })
-        }
-        else {
+        } else {
             res.status(200).send({
                 "message": "Token updated!"
             })
@@ -95,7 +94,6 @@ router.put(REST_PATH + '/update-spotify-token', (req, res) => {
 router.post(REST_PATH + '/insert-genres', (req, res) => {
     const usertoken = req.body.usertoken;
     const genres = req.body.genres;
-    //var sql = `INSERT INTO genres (usertoken, email, password) VALUES ('${token}','${email}', '${password}')`;
     console.log(usertoken);
 
 
@@ -114,8 +112,7 @@ router.post(REST_PATH + '/insert-genres', (req, res) => {
 
                         }
 
-                    }
-                    else {
+                    } else {
                         res.status(200).send({
                             "message": "Inserted"
                         })
