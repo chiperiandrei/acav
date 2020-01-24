@@ -72,7 +72,7 @@ router.post(REST_PATH + '/login', (req, res) => {
             }
         });
 });
-router.post(REST_PATH + '/update-spotify-token', (req, res) => {
+router.put(REST_PATH + '/update-spotify-token', (req, res) => {
     const spotifyToken = req.body.spotifytoken;
     const usertoken = req.body.usertoken;
     let sql = 'UPDATE users set spotifyToken=? WHERE usertoken=?';
@@ -91,6 +91,43 @@ router.post(REST_PATH + '/update-spotify-token', (req, res) => {
         }
     });
 
+});
+router.post(REST_PATH + '/insert-genres', (req, res) => {
+    const usertoken = req.body.usertoken;
+    const genres = req.body.genres;
+    //var sql = `INSERT INTO genres (usertoken, email, password) VALUES ('${token}','${email}', '${password}')`;
+    console.log(usertoken);
+
+
+    connection.query(
+        'SELECT * FROM users WHERE userToken = ?',
+        [usertoken], (error, results, fields) => {
+            if (results.length === 1) {
+                let sql_genres = `INSERT INTO genres (user_email, genre) VALUES('${results[0].email}','rissssss')`;
+                connection.query(sql_genres, (error, result, fields) => {
+                    if (error !== null) {
+                        try {
+                            res.status(404).send({
+                                "message": "Oups~~"
+                            })
+                        } catch (error) {
+
+                        }
+
+                    }
+                    else {
+                        res.status(200).send({
+                            "message": "Inserted"
+                        })
+                    }
+                });
+
+            } else {
+                res.status(404).json({
+                    message: 'token invalid'
+                });
+            }
+        });
 });
 app.use('/', router);
 
