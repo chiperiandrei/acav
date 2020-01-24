@@ -213,4 +213,80 @@ router.get('/songs', isAuthorized, (req, res) => {
     }
 });
 
+router.get('/albums', isAuthorized, (req, res) => {
+    env.log('GET', `${env.WA.URI}/spotify/albums`);
+
+    const tokenUri = `${env.WA.URI}/connect/spotify/token`;
+    const sess = req.session;
+
+    if (sess.user.spotify) {
+        request.post(tokenUri, {
+            json: { refresh_token: sess.user.spotify.refresh_token }
+        }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                sess.user.spotify.token = body.token;
+
+                const token = sess.user.spotify.token;
+
+                const renderData = {
+                    email: sess.user.email,
+                    spotify: {
+                        href: sess.user.spotify.href,
+                        name: sess.user.spotify.name,
+                        picture: sess.user.spotify.picture
+                    }
+                };
+
+                let temporary = [];
+
+                spotifyApi.setAccessToken(token);
+
+                spotifyApi.getMySavedAlbums({ limit: 50 })
+                    .then(data => {
+                        const d = data.body;
+
+                        for (const i of d.items) {
+                            const album = {
+                                id: i.album.id,
+                                href: i.album.external_urls.spotify,
+                                name: i.album.name,
+                                label: i.album.label,
+                                // popularity: i.album.popularity,
+                                // total_tracks: i.album.total_tracks,
+                                artists: []
+                            };
+
+                            for (const j of i.album.artists) {
+                                const artist = {
+                                    id: j.id,
+                                    href: j.external_urls.spotify,
+                                    name: j.name
+                                };
+                                album.artists.push(artist);
+                            }
+
+                            let index = i.album.images.length - 1;
+                            while (i.album.images[index].width < 160) {
+                                index--;
+                            }
+                            album.picture = i.album.images[index].url;
+
+                            temporary.push(album);
+                        }
+
+                        renderData.spotify.albums = temporary;
+
+                        console.log(renderData.spotify.albums);
+
+                        res.render('home', renderData);
+                    }, err => {
+                        console.error(err);
+                    });
+            }
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
 module.exports = router;

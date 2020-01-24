@@ -221,6 +221,94 @@
         }
       }
     }
+
+    .albums {
+      h3 {
+        margin-bottom: 15px;
+      }
+
+      .albums-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 20px;
+
+        .album {
+          display: grid;
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto;
+          background-color: $color1;
+          box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+
+          .image {
+            display: flex;
+            overflow: hidden;
+            align-items: start;
+            justify-content: center;
+
+            img {
+              width: auto; height: 100%;
+            }
+          }
+          .info {
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.05em;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+
+            .name {
+              display: block;
+              background-color: $text-color1;
+              padding: 15px 5px;
+              align-self: start;
+              font-family: "Alata", sans-serif;
+              color: $color1;
+              text-decoration: none;
+
+              &:hover {
+                & ~ .artists {
+                  background-color: $text-color1;
+                  .artist {
+                    color: $color1;
+                  }
+                }
+                & ~ .label {
+                  background-color: $text-color1;
+                }
+              }
+            }
+
+            .artists {
+              padding: 10px 5px;
+              transition: all 200ms ease-in;
+
+              a {
+                color: $text-color1;
+
+                &:after {
+                  content: ',';
+                }
+
+                &:last-child {
+                  &:after {
+                    content: '';
+                  }
+                }
+              }
+            }
+
+            .label {
+              text-transform: uppercase;
+              font-size: .7em;
+              padding: 7px 5px;
+              color: $color3;
+              transition: all 200ms ease-in;
+            }
+          }
+        }
+      }
+    }
   }
 }
 

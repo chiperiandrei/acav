@@ -19,6 +19,7 @@ router.get('/', isAuthorized, (req, res) => {
 
         const data = {
             redirectUri,
+            email: req.session.user.email,
             token: req.session.wa.token
         };
 
@@ -34,7 +35,6 @@ router.get('/', isAuthorized, (req, res) => {
         res.redirect('/');
     }
 });
-
 
 router.post('/', isAuthorized, (req, res) => {
     const token = req.body.spotify.token;

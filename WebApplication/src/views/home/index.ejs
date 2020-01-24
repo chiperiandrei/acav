@@ -33,6 +33,9 @@
             <a href="/spotify/artists" class="button button-opaque15 hover-none">
                 <span>Artists</span>
             </a>
+            <a href="/spotify/albums" class="button button-opaque15 hover-none">
+                <span>Albums</span>
+            </a>
             <a href="/spotify/playlists" class="button button-opaque15 hover-none">
                 <span>Playlists</span>
             </a>
@@ -98,6 +101,29 @@
                 <% }); %>
             </div>
         </div>
+        <% } %>
+        <% if (spotify.albums) { %>
+            <div class="albums">
+                <h3>Your favorite albums:</h3>
+                <div class="albums-grid">
+                    <% spotify.albums.forEach(album => { %>
+                        <div class="album">
+                            <div class="image">
+                                <img src="<%= album.picture %>">
+                            </div>
+                            <div class="info">
+                                <a href="<%= album.href %>" class="name" target="_blank"><%= album.name %></a>
+                                <div class="artists">
+                                <% album.artists.forEach(artist => { %>
+                                    <a href="<%= artist.href %>" class="artist"><%= artist.name %></a>
+                                <% }); %>
+                                </div>
+                                <div class="label"><%= album.label %></div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
         <% } %>
     </div>
 
