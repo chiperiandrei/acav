@@ -32,6 +32,11 @@ env.SAS.SPOTIFY = {
     STATE_KEY: process.env.SPOTIFY_STATE_KEY,
 };
 
+env.SAS.RABBITMQ = {
+    HOSTNAME: process.env.RABBITMQ_HOSTNAME,
+    AGGREGATIONS_QUEUE: process.env.RABBITMQ_AGGREGATIONS_QUEUE
+};
+
 env.log = (method, uri, data, received) => {
     console.log(`${env.SAS.NAME} ${method} ${uri}`);
 
