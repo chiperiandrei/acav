@@ -113,104 +113,325 @@ router.get('/callback', (req, res) => {
                 // Request to Spotify, data for Profiling
                 spotifyApi.setAccessToken(access_token);
 
+                let spotifyData = {};
 
+                spotifyData.tracks = spotifyApi.getMySavedTracks({ limit: 5 }) // 50
+                    .then(data => {
+                        const d = data.body;
+                        let result = [];
 
-                spotifyApi.getMySavedTracks({ limit: 50 })
-                .then(data => {
-                    const d = data.body;
-                    let result = [];
+                        for (const i of d.items) {
+                            const t = i.track;
 
-                    for (const i of d.items) {
-                        const t = i.track;
-
-                        const track = {
-                            album: {},
-                            artists: [],
-                            available_markets: t.available_markets,
-                            disc_number: t.disc_number,
-                            duration_ms: t.duration_ms,
-                            explicit: t.explicit,
-                            id: t.id,
-                            is_local: t.is_local,
-                            name: t.name,
-                            popularity: t.popularity,
-                            preview_url: t.preview_url,
-                            track_number: t.track_number,
-                            url: undefined
-                        };
-                        if (t.external_urls) {
-                            track.url = t.external_urls.spotify;
-                        }
-
-                        const album = {
-                            album_type: t.album.album_type,
-                            artists: [],
-                            available_markets: t.album.available_markets,
-                            id: t.album.id,
-                            images: t.album.images,
-                            name: t.album.name,
-                            release_date: t.album.release_date,
-                            release_date_precision: t.album.release_date_precision,
-                            total_tracks: t.album.total_tracks,
-                            url: undefined
-                        };
-                        if (t.album.external_urls) {
-                            album.url = t.album.external_urls.spotify
-                        }
-
-                        for (const a of t.album.artists) {
-                            const artist = {
-                                id: a.id,
-                                name: a.name,
+                            const track = {
+                                album: {},
+                                artists: [],
+                                available_markets: t.available_markets,
+                                disc_number: t.disc_number,
+                                duration_ms: t.duration_ms,
+                                explicit: t.explicit,
+                                id: t.id,
+                                is_local: t.is_local,
+                                name: t.name,
+                                popularity: t.popularity,
+                                preview_url: t.preview_url,
+                                track_number: t.track_number,
                                 url: undefined
                             };
-                            if (a.external_urls) {
-                                artist.url = a.external_urls.spotify
+                            if (t.external_urls) {
+                                track.url = t.external_urls.spotify;
                             }
-                            album.artists.push(artist)
-                        }
 
-                        track.album = album;
-
-                        for (const a of t.artists) {
-                            const artist = {
-                                id: a.id,
-                                name: a.name,
+                            const album = {
+                                album_type: t.album.album_type,
+                                artists: [],
+                                available_markets: t.album.available_markets,
+                                id: t.album.id,
+                                images: t.album.images,
+                                name: t.album.name,
+                                release_date: t.album.release_date,
+                                release_date_precision: t.album.release_date_precision,
+                                total_tracks: t.album.total_tracks,
                                 url: undefined
                             };
-                            if (a.external_urls) {
-                                artist.url = a.external_urls.spotify
+                            if (t.album.external_urls) {
+                                album.url = t.album.external_urls.spotify
                             }
-                            track.artists.push(artist)
+
+                            for (const a of t.album.artists) {
+                                const artist = {
+                                    id: a.id,
+                                    name: a.name,
+                                    url: undefined
+                                };
+                                if (a.external_urls) {
+                                    artist.url = a.external_urls.spotify
+                                }
+                                album.artists.push(artist)
+                            }
+
+                            track.album = album;
+
+                            for (const a of t.artists) {
+                                const artist = {
+                                    id: a.id,
+                                    name: a.name,
+                                    url: undefined
+                                };
+                                if (a.external_urls) {
+                                    artist.url = a.external_urls.spotify
+                                }
+                                track.artists.push(artist)
+                            }
+
+                            result.push(track);
                         }
 
-                        result.push(track);
-                    }
+                        return result;
+                    })
+                    .then(data => {
+                        let promise = [];
 
-                    return result;
-                }, err => {
-                    console.error(err);
+                        for (let i = 0; i < data.length; i++) {
+                            promise[i] = spotifyApi.getArtist(data[i].artists[0].id)
+                                .then(artist => artist.body.genres)
+                                .then(genres => {
+                                    data[i].genres = genres;
+                                    return data[i];
+                                });
+                        }
 
-                }).then(data => {
-                    for (let i = 0; i < data.length; i++) {
-                        spotifyApi.getArtist(data[i].artists[0].id)
-                        .then(new_data => {
-                            data[i].genres = new_data.body.genres;
-                            if (i === data.length - 1) {
-                                // [TODO:] Send Your Request to Paul!
-                                return data;
+                        return Promise.all(promise);
+                    });
+
+                spotifyData.artists = spotifyApi.getFollowedArtists({ limit: 5 }) // 20
+                    .then(data => {
+                        const d = data.body.artists;
+                        let result = [];
+
+                        for (const i of d.items) {
+                            const artist = {
+                                followers: undefined,
+                                genres: i.genres,
+                                id: i.id,
+                                images: i.images,
+                                name: i.name,
+                                popularity: i.popularity,
+                                url: undefined
+                            };
+
+                            if (i.followers) { artist.followers = i.followers.total; }
+
+                            if (i.external_urls) { artist.url = i.external_urls.spotify; }
+
+                            result.push(artist);
+                        }
+
+                        return result;
+                    });
+
+                spotifyData.albums = spotifyApi.getMySavedAlbums({  limit: 5 }) // 50
+                    .then(data => {
+                        const d = data.body;
+                        let result = [];
+
+                        for (const i of d.items) {
+                            const album = {
+                                album_type: i.album.album_type,
+                                artists: [],
+                                available_markets: i.album.available_markets,
+                                id: i.album.id,
+                                images: i.album.images,
+                                label: i.album.label,
+                                name: i.album.name,
+                                popularity: i.album.popularity,
+                                release_date: i.album.release_date,
+                                release_date_precision: i.album.release_date_precision,
+                                total_tracks: i.album.total_tracks,
+                                tracks: [],
+                                url: undefined
+                            };
+
+                            for (const a of i.album.artists) {
+                                const artist = {
+                                    id: a.id,
+                                    name: a.name,
+                                    url: undefined
+                                };
+                                if (a.external_urls) { artist.url = a.external_urls.spotify; }
+                                album.artists.push(artist);
                             }
-                        }, err => {
-                            console.log(err);
-                        }).then(data => {
-                            console.log(data);
-                        }, err => {
-                            console.log(err)
-                        });
-                    }
-                }, err => {
-                    console.error(err);
-                });
+
+                            for (const t of i.album.tracks.items) {
+                                const track = {
+                                    artists: [],
+                                    available_markets: t.available_markets,
+                                    disc_number: t.disc_number,
+                                    duration_ms: t.duration_ms,
+                                    explicit: t.explicit,
+                                    id: t.id,
+                                    is_local: t.is_local,
+                                    name: t.name,
+                                    popularity: t.popularity,
+                                    preview_url: t.preview_url,
+                                    track_number: t.track_number,
+                                    url: undefined
+                                };
+                                for (const a of t.artists) {
+                                    const artist = {
+                                        id: a.id,
+                                        name: a.name,
+                                        url: undefined
+                                    };
+                                    if (a.external_urls) { artist.url = a.external_urls.spotify; }
+                                    track.artists.push(artist);
+                                }
+                                if (t.external_urls) { track.url = t.external_urls.spotify; }
+                                album.tracks.push(track);
+                            }
+
+                            if (i.external_urls) { album.url = i.external_urls.spotify; }
+
+                            result.push(album)
+                        }
+
+                        return result;
+                    });
+
+                // spotifyData.playlists = spotifyApi.getMe()
+                //     .then(data => data.body.id)
+                //     .then(id => {
+                //          return spotifyApi.getUserPlaylists(id)
+                //          .then(data => {
+                //              const d = data.body;
+                //              let result = [];
+                //
+                //              for (const i of d.items) {
+                //                  const playlist = {
+                //                      collaborative: i.collaborative,
+                //                      description: i.description,
+                //                      id: i.id,
+                //                      images: i.images,
+                //                      name: i.name,
+                //                      is_public: i.public,
+                //                      tracks: [],
+                //                      url: undefined
+                //                  };
+                //                  if (i.external_urls) { playlist.url = i.external_urls.spotify; }
+                //
+                //                  result.push(playlist);
+                //              }
+                //
+                //              return result;
+                //          })
+                //          .then(playlists => {
+                //              for (let i = 0; i < playlists.length; i++) {
+                //                  playlists[i].tracks = spotifyApi.getPlaylistTracks(playlists[i].id)
+                //                  .then(data => {
+                //                      const d = data.body;
+                //                      let result = [];
+                //
+                //                      for (const i of d.items) {
+                //                          const t = i.track;
+                //
+                //                          const track = {
+                //                              album: {},
+                //                              artists: [],
+                //                              available_markets: t.available_markets,
+                //                              disc_number: t.disc_number,
+                //                              duration_ms: t.duration_ms,
+                //                              explicit: t.explicit,
+                //                              id: t.id,
+                //                              is_local: t.is_local,
+                //                              name: t.name,
+                //                              popularity: t.popularity,
+                //                              preview_url: t.preview_url,
+                //                              track_number: t.track_number,
+                //                              url: undefined
+                //                          };
+                //                          if (t.external_urls) {
+                //                              track.url = t.external_urls.spotify;
+                //                          }
+                //
+                //                          const album = {
+                //                              album_type: t.album.album_type,
+                //                              artists: [],
+                //                              available_markets: t.album.available_markets,
+                //                              id: t.album.id,
+                //                              images: t.album.images,
+                //                              name: t.album.name,
+                //                              release_date: t.album.release_date,
+                //                              release_date_precision: t.album.release_date_precision,
+                //                              total_tracks: t.album.total_tracks,
+                //                              url: undefined
+                //                          };
+                //                          if (t.album.external_urls) {
+                //                              album.url = t.album.external_urls.spotify
+                //                          }
+                //
+                //                          for (const a of t.album.artists) {
+                //                              const artist = {
+                //                                  id: a.id,
+                //                                  name: a.name,
+                //                                  url: undefined
+                //                              };
+                //                              if (a.external_urls) {
+                //                                  artist.url = a.external_urls.spotify
+                //                              }
+                //                              album.artists.push(artist)
+                //                          }
+                //
+                //                          track.album = album;
+                //
+                //                          for (const a of t.artists) {
+                //                              const artist = {
+                //                                  id: a.id,
+                //                                  name: a.name,
+                //                                  url: undefined
+                //                              };
+                //                              if (a.external_urls) {
+                //                                  artist.url = a.external_urls.spotify
+                //                              }
+                //                              track.artists.push(artist)
+                //                          }
+                //
+                //                          result.push(track);
+                //                      }
+                //
+                //                      return result;
+                //                  })
+                //                  .then(data => {
+                //                      let promise = [];
+                //
+                //                      for (let i = 0; i < data.length; i++) {
+                //                          promise[i] = spotifyApi.getArtist(data[i].artists[0].id)
+                //                          .then(artist => artist.body.genres)
+                //                          .then(genres => {
+                //                              data[i].genres = genres;
+                //                              return data[i];
+                //                          });
+                //                      }
+                //
+                //                      return Promise.all(promise);
+                //                  });
+                //              }
+                //              return Promise.all(playlists);
+                //          });
+                //     });
+
+                Promise.all([spotifyData.tracks, spotifyData.artists, spotifyData.albums])
+                    .then(([tracks, artists, albums]) => {
+                        const data = {
+                            albums,
+                            email: req.session.email,
+                            artists,
+                            tracks
+                        };
+
+                        fs.writeFileSync('output.json', JSON.stringify(data));
+                    });
+
+                req.session.destroy();
             } else {
                 env.message('Login failed!');
 
