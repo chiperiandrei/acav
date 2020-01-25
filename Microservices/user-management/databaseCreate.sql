@@ -1,89 +1,47 @@
--- phpMyAdmin SQL Dump
--- version 4.9.2
--- https://www.phpmyadmin.net/
---
--- Gazdă: 127.0.0.1
--- Timp de generare: ian. 24, 2020 la 12:54 PM
--- Versiune server: 10.4.11-MariaDB
--- Versiune PHP: 7.4.1
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.4.11-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             10.3.0.5771
+-- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
---
--- Bază de date: `acav`
---
 
--- --------------------------------------------------------
+-- Dumping database structure for acav
+DROP DATABASE IF EXISTS `acav`;
+CREATE DATABASE IF NOT EXISTS `acav` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `acav`;
 
---
--- Structură tabel pentru tabel `genres`
---
-
-CREATE TABLE `genres` (
+-- Dumping structure for table acav.genres
+DROP TABLE IF EXISTS `genres`;
+CREATE TABLE IF NOT EXISTS `genres` (
   `user_email` varchar(255) NOT NULL,
-  `genre` varchar(50) NOT NULL
+  `genre` varchar(50) NOT NULL,
+  KEY `user_email` (`user_email`),
+  CONSTRAINT `user_email` FOREIGN KEY (`user_email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='This table will keep the userpreferences for music genres.';
 
--- --------------------------------------------------------
+-- Data exporting was unselected.
 
---
--- Structură tabel pentru tabel `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+-- Dumping structure for table acav.users
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usertoken` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `spotifyToken` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `spotifyToken` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
---
--- Indexuri pentru tabele eliminate
---
+-- Data exporting was unselected.
 
---
--- Indexuri pentru tabele `genres`
---
-ALTER TABLE `genres`
-  ADD KEY `user_email` (`user_email`);
-
---
--- Indexuri pentru tabele `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT pentru tabele eliminate
---
-
---
--- AUTO_INCREMENT pentru tabele `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constrângeri pentru tabele eliminate
---
-
---
--- Constrângeri pentru tabele `genres`
---
-ALTER TABLE `genres`
-  ADD CONSTRAINT `user_email` FOREIGN KEY (`user_email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
-
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
