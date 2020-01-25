@@ -431,7 +431,7 @@ router.get('/callback', (req, res) => {
                         fs.writeFileSync('output.json', JSON.stringify(data));
                     });
 
-                req.session.destroy();
+                // req.session.destroy();
             } else {
                 env.message('Login failed!');
 
