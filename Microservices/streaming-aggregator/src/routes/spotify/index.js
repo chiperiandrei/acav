@@ -12,6 +12,8 @@ const spotifyApi = new SpotifyWebApi();
 
 const fs = require('fs');
 
+var amqp = require('amqplib/callback_api');
+
 // application requests authorization
 router.get('/login', (req, res) => {
     env.log('GET', `${env.SAS.URI}/spotify/login`);
@@ -428,6 +430,7 @@ router.get('/callback', (req, res) => {
                             tracks
                         };
 
+                        publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
                         fs.writeFileSync('output.json', JSON.stringify(data));
                     });
 
@@ -440,6 +443,30 @@ router.get('/callback', (req, res) => {
         });
     }
 });
+
+let publish_aggregated_data = function(queue, msg) {
+    amqp.connect(env.SAS.RABBITMQ.HOSTNAME, function (error0, connection) {
+        if (error0) {
+            throw error0;
+        }
+        connection.createChannel(function (error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+
+            channel.assertQueue(queue, {
+                durable: false
+            });
+            channel.sendToQueue(queue, Buffer.from(msg));
+
+            console.log(" [x] Sent %s", msg);
+        });
+        setTimeout(function () {
+            connection.close();
+            process.exit(0);
+        }, 500);
+    });
+};
 
 // requesting access token from refresh token
 router.post('/token', (req, res) => {
