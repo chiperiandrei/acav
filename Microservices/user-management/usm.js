@@ -13,6 +13,19 @@ var connection = mysql.createConnection({
     password: process.env.PASSWORDDB,
     database: process.env.DATABASE
 });
+dotEnv.log = (method, uri, data, received) => {
+    console.log(`USM ${method} ${uri}`);
+
+    if (received === true) {
+        process.stdout.write('⤶ ');
+    } else if (received === false) {
+        process.stdout.write('⤷ ');
+    }
+
+    if (data) {
+        console.log(data);
+    }
+};
 
 var md5 = require('md5');
 const tokenGenerator = function (email, password) {
@@ -29,6 +42,7 @@ connection.connect();
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
 router.post(REST_PATH + '/register', (req, res) => {
+    dotEnv.log('POST', `${process.env.APIURL}` + '/register');
     const email = req.body.email;
     const password = md5(req.body.password);
     const token = tokenGenerator(email, password);
@@ -47,6 +61,7 @@ router.post(REST_PATH + '/register', (req, res) => {
 });
 
 router.post(REST_PATH + '/login', (req, res) => {
+    dotEnv.log('POST', `${process.env.APIURL}` + '/login');
 
     const email = req.body.email;
     const password = req.body.password;
@@ -73,6 +88,7 @@ router.post(REST_PATH + '/login', (req, res) => {
         });
 });
 router.put(REST_PATH + '/update-spotify-token', (req, res) => {
+    dotEnv.log('PUT', `${process.env.APIURL}` + '/update-spotify-token');
     const spotifyToken = req.body.spotifytoken;
     const usertoken = req.body.usertoken;
     let sql = 'UPDATE users set spotifyToken=? WHERE usertoken=?';
@@ -92,6 +108,7 @@ router.put(REST_PATH + '/update-spotify-token', (req, res) => {
 
 });
 router.post(REST_PATH + '/insert-genres', (req, res) => {
+    dotEnv.log('POST', `${process.env.APIURL}` + '/insert-genres');
     const usertoken = req.body.usertoken;
     const genres = req.body.genres;
     console.log(usertoken);
