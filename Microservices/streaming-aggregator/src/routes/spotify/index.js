@@ -10,7 +10,7 @@ const env = require('../../environment');
 const SpotifyWebApi = require('spotify-web-api-node');
 const spotifyApi = new SpotifyWebApi();
 
-const fs = require('fs');
+// const fs = require('fs');
 
 var amqp = require('amqplib/callback_api');
 
@@ -431,7 +431,7 @@ router.get('/callback', (req, res) => {
                         };
 
                         publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
-                        fs.writeFileSync('output.json', JSON.stringify(data));
+                        // fs.writeFileSync('output.json', JSON.stringify(data));
                     });
 
                 // req.session.destroy();
