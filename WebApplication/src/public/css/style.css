@@ -612,6 +612,21 @@ main > .container > .account-wrapper > .account-container > .account > form > .b
   font-weight: 700;
   padding: 10px 35px;
 }
+main > .container > .account-wrapper > .account-container > .description-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+}
+main > .container > .account-wrapper > .account-container > .description-container .description {
+  font-size: 1.05em;
+}
+main > .container > .account-wrapper > .account-container > .description-container .description a {
+  color: #212121;
+  font-weight: 700;
+}
+main > .container > .account-wrapper > .account-container > .description-container .register-container .button {
+  display: inline-block;
+}
 main > .container > .contact-wrapper {
   padding: 15px;
 }

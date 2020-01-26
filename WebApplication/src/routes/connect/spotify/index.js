@@ -74,6 +74,17 @@ router.post('/', isAuthorized, (req, res) => {
             console.error(err);
             res.end();
         });
+
+    const requestUri = `${env.UMS.URI}/update-spotify-token`;
+
+    env.log('PUT', requestUri);
+
+    request.put(requestUri, {
+        json: {
+            spotify_token: req.session.user.spotify.refresh_token,
+            user_token: req.session.wa.token
+        }
+    });
 });
 
 router.post('/token', (req, res) => {

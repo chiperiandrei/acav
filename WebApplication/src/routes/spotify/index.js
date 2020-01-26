@@ -126,16 +126,6 @@ router.get('/playlists', isAuthorized, (req, res) => {
 
                         res.render('home', renderData);
 
-                        // [Deny] #forSongs
-                        // const playlist = renderData.spotify.playlists[1];
-                        //
-                        // spotifyApi.getPlaylistTracks(playlist.id, { limit: 100 })
-                        //     .then(data => {
-                        //         console.log(data.body.items)
-                        //     }, err => {
-                        //         console.error(err);
-                        //     });
-
                     }, err => {
                         console.error(err);
                     });

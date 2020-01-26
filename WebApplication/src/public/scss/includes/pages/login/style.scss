@@ -60,8 +60,27 @@
           }
         }
       }
+
+      & > .description-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+
+        .description {
+          font-size: 1.05em;
+
+          a {
+            color: $text-color1;
+            font-weight: 700;
+          }
+        }
+
+        .register-container {
+          .button {
+            display: inline-block;
+          }
+        }
+      }
     }
-
-
   }
 }
