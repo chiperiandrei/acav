@@ -89,8 +89,8 @@ router.post(REST_PATH + '/login', (req, res) => {
 });
 router.put(REST_PATH + '/update-spotify-token', (req, res) => {
     dotEnv.log('PUT', `${process.env.APIURL}` + '/update-spotify-token');
-    const spotifyToken = req.body.spotifytoken;
-    const usertoken = req.body.usertoken;
+    const spotifyToken = req.body.spotify_token;
+    const usertoken = req.body.user_token;
     let sql = 'UPDATE users set spotifyToken=? WHERE usertoken=?';
 
     let data = [spotifyToken, usertoken];
