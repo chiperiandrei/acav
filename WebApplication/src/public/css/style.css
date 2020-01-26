@@ -629,6 +629,43 @@ main > .container > .account-wrapper > .account-container > .description-contain
 }
 main > .container > .contact-wrapper {
   padding: 15px;
+  background-color: #e0e0e0;
+}
+main > .container > .contact-wrapper > h2 {
+  font-family: "Alata", sans-serif;
+  text-transform: uppercase;
+  font-size: 1.3em;
+  padding-bottom: 15px;
+}
+main > .container > .contact-wrapper > .contributors {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+main > .container > .contact-wrapper > .contributors li {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  padding: 10px;
+}
+main > .container > .contact-wrapper > .contributors li .buttons {
+  display: flex;
+  align-items: center;
+}
+main > .container > .contact-wrapper > .contributors li .buttons .button {
+  display: inline-block;
+  padding: 5px 7px;
+  margin: 5px;
+  font-size: 0.9em;
+}
+main > .container > .contact-wrapper > .contributors li .buttons .button.button-github {
+  background-color: rgba(53, 52, 52, 0.85);
+  color: #e0e0e0;
+  font-weight: 300;
+  margin-left: 0;
+}
+main > .container > .contact-wrapper > .contributors li .buttons .button.button-email {
+  background-color: #a5d6a7;
 }
 @media only screen and (max-width: 850px) {
   main {
