@@ -244,6 +244,7 @@
             overflow: hidden;
             align-items: start;
             justify-content: center;
+            background-color: transparentize($text-color1, .05);
 
             img {
               width: auto; height: 100%;
@@ -312,12 +313,12 @@
   }
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1300px) {
   & > .home-wrapper {
     & > .spotify-wrapper {
-      .artists {
-        .artists-grid {
-          grid-template-columns: repeat(3, 1fr);
+      .albums {
+        .albums-grid {
+          grid-template-columns: repeat(4, 1fr);
         }
       }
     }
@@ -327,9 +328,19 @@
 @media only screen and (max-width: 1100px) {
   & > .home-wrapper {
     & > .spotify-wrapper {
+      .artists {
+        .artists-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
       .playlists {
         .playlists-grid {
           grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .albums {
+        .albums-grid {
+          grid-template-columns: repeat(3, 1fr);
         }
       }
     }
@@ -371,6 +382,23 @@
               margin-top: 10px;
             }
           }
+        }
+      }
+      .albums {
+        .albums-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  & > .home-wrapper {
+    & > .spotify-wrapper {
+      .albums {
+        .albums-grid {
+          grid-template-columns: 1fr;
         }
       }
     }

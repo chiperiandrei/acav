@@ -54,6 +54,10 @@
             border-radius: 50%;
         }
     }
+
+    &.active {
+        border: 1px solid $text-color1;
+    }
 }
 
 input[type="email"], input[type="password"] {

@@ -82,6 +82,9 @@ a:hover {
   max-height: 20px;
   border-radius: 50%;
 }
+.button.active {
+  border: 1px solid #212121;
+}
 
 input[type=email], input[type=password] {
   border: 1px solid transparent;
@@ -468,6 +471,7 @@ main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid .album
   overflow: hidden;
   align-items: start;
   justify-content: center;
+  background-color: rgba(33, 33, 33, 0.95);
 }
 main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid .album .image img {
   width: auto;
@@ -519,14 +523,20 @@ main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid .album
   color: #bdbdbd;
   transition: all 200ms ease-in;
 }
+@media only screen and (max-width: 1300px) {
+  main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 @media only screen and (max-width: 1100px) {
   main > .container > .home-wrapper > .spotify-wrapper .artists .artists-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-}
-@media only screen and (max-width: 1100px) {
   main > .container > .home-wrapper > .spotify-wrapper .playlists .playlists-grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+  main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 @media only screen and (max-width: 850px) {
@@ -549,6 +559,14 @@ main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid .album
     grid-column-end: 3;
     padding-left: 35px;
     margin-top: 10px;
+  }
+  main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media only screen and (max-width: 600px) {
+  main > .container > .home-wrapper > .spotify-wrapper .albums .albums-grid {
+    grid-template-columns: 1fr;
   }
 }
 @media only screen and (max-width: 600px) {
@@ -666,6 +684,16 @@ main > .container > .contact-wrapper > .contributors li .buttons .button.button-
 }
 main > .container > .contact-wrapper > .contributors li .buttons .button.button-email {
   background-color: #a5d6a7;
+}
+@media only screen and (max-width: 1200px) {
+  main > .container > .contact-wrapper > .contributors {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media only screen and (max-width: 850px) {
+  main > .container > .contact-wrapper > .contributors {
+    grid-template-columns: 1fr;
+  }
 }
 @media only screen and (max-width: 850px) {
   main {

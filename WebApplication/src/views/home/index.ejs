@@ -27,16 +27,20 @@
         </div>
         <h3 class="upper-hr"><i class="far fa-star"></i> View your favorites:</h3>
         <div class="buttons">
-            <a href="/spotify/songs" class="button button-opaque15 hover-none">
+            <a href="/spotify/songs" class="button button-opaque15 hover-none<% if (locals.currentPage === 'songs') {
+            %>  active<% } %>">
                 <span>Songs</span>
             </a>
-            <a href="/spotify/artists" class="button button-opaque15 hover-none">
+            <a href="/spotify/artists" class="button button-opaque15 hover-none<% if (locals.currentPage === 'artists') {
+            %>  active<% } %>">
                 <span>Artists</span>
             </a>
-            <a href="/spotify/albums" class="button button-opaque15 hover-none">
+            <a href="/spotify/albums" class="button button-opaque15 hover-none<% if (locals.currentPage === 'albums') {
+            %>  active<% } %>">
                 <span>Albums</span>
             </a>
-            <a href="/spotify/playlists" class="button button-opaque15 hover-none">
+            <a href="/spotify/playlists" class="button button-opaque15 hover-none<% if (locals.currentPage === 'playlists') {
+            %>  active<% } %>">
                 <span>Playlists</span>
             </a>
         </div>

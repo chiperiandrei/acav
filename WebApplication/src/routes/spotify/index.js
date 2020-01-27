@@ -34,6 +34,7 @@ router.get('/artists', isAuthorized, (req, res) => {
 
                 const renderData = {
                     email: sess.user.email,
+                    currentPage: 'artists',
                     spotify: {
                         href: sess.user.spotify.href,
                         name: sess.user.spotify.name,
@@ -97,6 +98,7 @@ router.get('/playlists', isAuthorized, (req, res) => {
 
                 const renderData = {
                     email: sess.user.email,
+                    currentPage: 'playlists',
                     spotify: {
                         href: sess.user.spotify.href,
                         name: sess.user.spotify.name,
@@ -153,6 +155,7 @@ router.get('/songs', isAuthorized, (req, res) => {
 
                 const renderData = {
                     email: sess.user.email,
+                    currentPage: 'songs',
                     spotify: {
                         href: sess.user.spotify.href,
                         name: sess.user.spotify.name,
@@ -220,6 +223,7 @@ router.get('/albums', isAuthorized, (req, res) => {
 
                 const renderData = {
                     email: sess.user.email,
+                    currentPage: 'albums',
                     spotify: {
                         href: sess.user.spotify.href,
                         name: sess.user.spotify.name,
