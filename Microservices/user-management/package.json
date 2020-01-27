@@ -4,7 +4,8 @@
   "description": "",
   "main": "usm.js",
   "scripts": {
-    "start-dev": "nodemon usm.js"
+    "start-dev": "nodemon usm.js",
+    "start-db": "docker container start user-management-mysqldb"
   },
   "keywords": [],
   "author": "",

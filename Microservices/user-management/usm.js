@@ -72,7 +72,8 @@ router.post(REST_PATH + '/login', (req, res) => {
             if (results.length === 1) {
                 if (md5(password) === results[0].password) {
                     res.json({
-                        token: results[0].usertoken
+                        token: results[0].usertoken,
+                        spotify_token: results[0].spotifyToken
                     });
                 } else {
                     res.json({
@@ -105,7 +106,6 @@ router.put(REST_PATH + '/update-spotify-token', (req, res) => {
             })
         }
     });
-
 });
 router.post(REST_PATH + '/insert-genres', (req, res) => {
     dotEnv.log('POST', `${process.env.APIURL}` + '/insert-genres');
