@@ -3,6 +3,9 @@
 const router = require('express').Router();
 const request = require('request');
 
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi();
+
 const env = require('../../environment');
 
 router.get('/', async (req, res) => {
@@ -15,7 +18,9 @@ router.post('/', async (req, res) => {
 
     const redirectUri = `${env.WA.URI}/`;
     const requestUri = `${env.UMS.URI}/login`;
+    const tokenUri = `${env.WA.URI}/connect/spotify/token`;
 
+    const sess = req.session;
     const email = req.body.email;
     const password = req.body.password;
 
@@ -29,14 +34,47 @@ router.post('/', async (req, res) => {
                     env.log('POST', requestUri, body, true);
 
                     if (body && body.token) {
-                        req.session.wa = {
+                        sess.wa = {
                             token: body.token,
                             date: new Date()
                         };
-                        req.session.user = {
+                        sess.user = {
                             email
                         };
-                        res.redirect(redirectUri);
+
+                        if (body.spotify_token) {
+                            sess.user.spotify = {refresh_token: body.spotify_token};
+
+                            request.post(tokenUri, {
+                                json: { refresh_token: sess.user.spotify.refresh_token }
+                            }, (error, response, body) => {
+                                if (!error && response.statusCode === 200) {
+                                    sess.user.spotify.token = body.token;
+                                    spotifyApi.setAccessToken(sess.user.spotify.token);
+                                    spotifyApi.getMe()
+                                        .then((data) => {
+                                            const d = data.body;
+                                            sess.user.spotify.id = d.id;
+                                            sess.user.spotify.href = d.external_urls.spotify;
+                                            sess.user.spotify.name = d.display_name;
+                                            sess.user.spotify.product = d.product;
+                                            if (d.images.length > 0) {
+                                                sess.user.spotify.picture = d.images[0].url;
+                                            }
+                                            res.redirect(redirectUri);
+                                        }, (err) => {
+                                            console.error(err);
+                                            delete sess.user.spotify;
+                                            res.redirect(redirectUri);
+                                        });
+                                } else {
+                                    delete sess.user.spotify;
+                                    res.redirect(redirectUri);
+                                }
+                            });
+                        } else {
+                            res.redirect(redirectUri);
+                        }
                     } else {
                         res.render('login', { message: body.message });
                     }

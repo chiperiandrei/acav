@@ -20,6 +20,7 @@ router.get('/', isAuthorized, (req, res) => {
             name: sess.user.spotify.name,
             picture: sess.user.spotify.picture
         };
+
     }
 
     res.render('home', data);

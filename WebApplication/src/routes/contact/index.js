@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
         currentPage: 'contact'
     };
 
-    if (sess.email) {
-        data.email = sess.email
+    if (sess.wa && sess.user) {
+        data.email = sess.user.email;
     }
 
     res.render('contact', data);
