@@ -430,7 +430,7 @@ router.get('/callback', (req, res) => {
                             tracks
                         };
 
-                        publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
+                        // publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
                         // fs.writeFileSync('output.json', JSON.stringify(data));
                     });
 
