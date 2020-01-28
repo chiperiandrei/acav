@@ -1,2 +1,3 @@
 node_modules
 .idea
+Microservices/streaming-aggregator/output.json

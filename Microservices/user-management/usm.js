@@ -143,6 +143,32 @@ router.post(REST_PATH + '/insert-genres', (req, res) => {
             }
         });
 });
+
+
+router.get(REST_PATH + '/spotify-token/:email', (req, res) => {
+    dotEnv.log('GET', `${process.env.APIURL}` + '/spotify-token');
+
+    const email = req.params.email;
+
+    connection.query(
+        'SELECT * FROM users WHERE email = ?',
+        [email], (error, results, fields) => {
+            if (results.length === 1) {
+
+                res.json({
+                    "message": results[0].spotifyToken
+                });
+
+
+            } else {
+                res.status(404).json({
+                    message: 'Email is incorrect!'
+                });
+            }
+        });
+});
+
+
 app.use('/', router);
 
 const port = process.env.port || 4000;
