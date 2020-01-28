@@ -4,7 +4,7 @@
   "description": "Profiling Microservice",
   "main": "src/listeners/profilin_listener.js",
   "scripts": {
-    "start-dev": "nodemon src/listeners/profilin_listener.js"
+    "start-dev": "nodemon src/listeners/profiling_listener.js"
   },
   "author": "",
   "license": "ISC",
