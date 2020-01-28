@@ -29,7 +29,7 @@ router.get('/login', (req, res) => {
     }
 
     // redirect from Spotify API
-    const redirectUri = `${env.SAS.URI}/callback`;
+    const redirectUri = `${env.SAS.URI}/spotify/callback`;
 
     const scope = 'user-read-private user-read-email user-library-read user-follow-read';
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({
@@ -454,12 +454,14 @@ router.get('/bypass-authentication/:email', (req, res) => {
         (error, response, body) => {
         if (!error && response.statusCode === 200) {
             const refresh_token = body["spotify-token"];
+            console.log('rt', refresh_token);
 
             request.post(tokenUri, {
                 json: { refresh_token }
             }, (error, response, body) => {
                 if (!error && response.statusCode === 200) {
                     const access_token = body.token;
+                    console.log('at', access_token);
 
                     spotifyApi.setAccessToken(access_token);
 
@@ -658,6 +660,7 @@ router.get('/bypass-authentication/:email', (req, res) => {
                             };
 
                             publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
+                            res.end();
                         });
                 }
             });
