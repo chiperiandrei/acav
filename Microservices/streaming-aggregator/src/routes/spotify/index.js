@@ -453,14 +453,15 @@ router.get('/bypass-authentication/:email', (req, res) => {
     request.get(`${env.USM.URI}/spotify-token/${req.params.email}`, {},
         (error, response, body) => {
         if (!error && response.statusCode === 200) {
-            const refresh_token = body["spotify-token"];
-            console.log('rt', refresh_token);
+            console.log('body: ', body);
+            const refresh_token = JSON.parse(body).token;
+            console.log('rt ', refresh_token);
 
             request.post(tokenUri, {
                 json: { refresh_token }
             }, (error, response, body) => {
                 if (!error && response.statusCode === 200) {
-                    const access_token = body.token;
+                    const access_token = body.access_token;
                     console.log('at', access_token);
 
                     spotifyApi.setAccessToken(access_token);
@@ -654,7 +655,7 @@ router.get('/bypass-authentication/:email', (req, res) => {
                         .then(([tracks, artists, albums]) => {
                             const data = {
                                 albums,
-                                email: req.session.email,
+                                email: req.params.email,
                                 artists,
                                 tracks
                             };
@@ -682,7 +683,7 @@ let publish_aggregated_data = function(queue, msg) {
             channel.assertQueue(queue, {
                 durable: false
             });
-            channel.sendToQueue(queue, Buffer.from(msg));
+            channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)));
 
             console.log(" [x] Sent %s", msg);
         });

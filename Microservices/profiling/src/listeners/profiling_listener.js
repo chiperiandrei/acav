@@ -22,7 +22,7 @@ amqp.connect(process.env.RABBITMQ_HOSTNAME, function(error0, connection) {
         console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
 
         channel.consume(queue, function(msg) {
-            publisher.push_to_ES(process.env.ACAV_INDEX, msg);
+            publisher.push_to_ES(process.env.ACAV_INDEX, msg.content.toString());
             console.log(" [x] Received %s", msg.content.toString());
         }, {
             noAck: true
