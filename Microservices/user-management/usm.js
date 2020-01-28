@@ -155,8 +155,8 @@ router.get(REST_PATH + '/spotify-token/:email', (req, res) => {
         [email], (error, results, fields) => {
             if (results.length === 1) {
 
-                res.json({
-                    "message": results[0].spotifyToken
+                res.status(200).json({
+                    "spotify-token": results[0].spotifyToken
                 });
 
 
