@@ -446,6 +446,9 @@ router.get('/callback', (req, res) => {
 
 // test method
 router.get('/bypass-authentication/:email', (req, res) => {
+    // for testing
+    // http://localhost:3000/api/sas/spotify/bypass-authentication/robopatrascu@gmail.com
+
     env.log('GET', `${env.SAS.URI}/spotify/bypass-authentication`);
 
     const tokenUri = `${env.SAS.URI}/spotify/token`;
