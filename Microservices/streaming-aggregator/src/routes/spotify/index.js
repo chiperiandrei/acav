@@ -654,8 +654,8 @@ router.get('/bypass-authentication/:email', (req, res) => {
                     Promise.all([spotifyData.tracks, spotifyData.artists, spotifyData.albums])
                         .then(([tracks, artists, albums]) => {
                             const data = {
-                                albums,
                                 email: req.params.email,
+                                albums,
                                 artists,
                                 tracks
                             };
