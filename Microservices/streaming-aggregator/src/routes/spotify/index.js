@@ -445,12 +445,12 @@ router.get('/callback', (req, res) => {
 });
 
 // test method
-router.get('/bypass-authentication', (req, res) => {
+router.get('/bypass-authentication/:email', (req, res) => {
     env.log('GET', `${env.SAS.URI}/spotify/bypass-authentication`);
 
     const tokenUri = `${env.SAS.URI}/spotify/token`;
 
-    request.get(`${env.USM.URI}/spotify-token/${req.query.email}`, {},
+    request.get(`${env.USM.URI}/spotify-token/${req.params.email}`, {},
         (error, response, body) => {
         if (!error && response.statusCode === 200) {
             const refresh_token = body["spotify-token"];
