@@ -37,6 +37,10 @@ env.SAS.RABBITMQ = {
     AGGREGATIONS_QUEUE: process.env.RABBITMQ_AGGREGATIONS_QUEUE
 };
 
+env.USM = {
+    URI: `${process.env.UMS_HOSTNAME}:${process.env.UMS_PORT + process.env.UMS_REST_PATH}`
+};
+
 env.log = (method, uri, data, received) => {
     console.log(`${env.SAS.NAME} ${method} ${uri}`);
 

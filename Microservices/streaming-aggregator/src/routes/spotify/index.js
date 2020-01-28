@@ -29,7 +29,7 @@ router.get('/login', (req, res) => {
     }
 
     // redirect from Spotify API
-    const redirectUri = `${env.SAS.URI}/spotify/bypass-authentication`;
+    const redirectUri = `${env.SAS.URI}/callback`;
 
     const scope = 'user-read-private user-read-email user-library-read user-follow-read';
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({
@@ -444,195 +444,37 @@ router.get('/callback', (req, res) => {
     }
 });
 
-
-// application requests refresh and access tokens
 // test method
 router.get('/bypass-authentication', (req, res) => {
-    const code = req.query.code || null;
+    env.log('GET', `${env.SAS.URI}/spotify/bypass-authentication`);
 
-    res.clearCookie(env.SAS.SPOTIFY.STATE_KEY);
-    const buffer = Buffer.from(env.SAS.SPOTIFY.CLIENT_ID + ':' + env.SAS.SPOTIFY.CLIENT_SECRET);
-    const authOptions = {
-        url: 'https://accounts.spotify.com/api/token',
-        headers: {
-            'Authorization': `Basic ${buffer.toString('base64')}`
-        },
-        form: {
-            code: code,
-            redirect_uri: null,
-            grant_type: 'authorization_code'
-        },
-        json: true
-    };
-    request.post(authOptions, (error, response, body) => {
+    const tokenUri = `${env.SAS.URI}/spotify/token`;
+
+    request.get(`${env.USM.URI}/spotify-token/${req.query.email}`, {},
+        (error, response, body) => {
         if (!error && response.statusCode === 200) {
-            const refresh_token = body.refresh_token;
-            const access_token = body.access_token;
+            const refresh_token = body["spotify-token"];
 
-            env.log(
-                'GET',
-                `${env.SAS.URI}/spotify/callback`,
-                {
-                        access_token: access_token.slice(0, 15) + ' [...]',
-                        refresh_token: refresh_token.slice(0, 15) + ' [...]'
-                    },
-                    true
-                );
+            request.post(tokenUri, {
+                json: { refresh_token }
+            }, (error, response, body) => {
+                if (!error && response.statusCode === 200) {
+                    const access_token = body.token;
 
-                // Request to Spotify, data for Profiling
-                spotifyApi.setAccessToken(access_token);
+                    spotifyApi.setAccessToken(access_token);
 
-                let spotifyData = {};
+                    let spotifyData = {};
 
-                spotifyData.tracks = spotifyApi.getMySavedTracks({ limit: 5 }) // 50
-                    .then(data => {
-                        const d = data.body;
-                        let result = [];
+                    spotifyData.tracks = spotifyApi.getMySavedTracks({ limit: 5 }) // 50
+                        .then(data => {
+                            const d = data.body;
+                            let result = [];
 
-                        for (const i of d.items) {
-                            const t = i.track;
+                            for (const i of d.items) {
+                                const t = i.track;
 
-                            const track = {
-                                album: {},
-                                artists: [],
-                                available_markets: t.available_markets,
-                                disc_number: t.disc_number,
-                                duration_ms: t.duration_ms,
-                                explicit: t.explicit,
-                                id: t.id,
-                                is_local: t.is_local,
-                                name: t.name,
-                                popularity: t.popularity,
-                                preview_url: t.preview_url,
-                                track_number: t.track_number,
-                                url: undefined
-                            };
-                            if (t.external_urls) {
-                                track.url = t.external_urls.spotify;
-                            }
-
-                            const album = {
-                                album_type: t.album.album_type,
-                                artists: [],
-                                available_markets: t.album.available_markets,
-                                id: t.album.id,
-                                images: t.album.images,
-                                name: t.album.name,
-                                release_date: t.album.release_date,
-                                release_date_precision: t.album.release_date_precision,
-                                total_tracks: t.album.total_tracks,
-                                url: undefined
-                            };
-                            if (t.album.external_urls) {
-                                album.url = t.album.external_urls.spotify
-                            }
-
-                            for (const a of t.album.artists) {
-                                const artist = {
-                                    id: a.id,
-                                    name: a.name,
-                                    url: undefined
-                                };
-                                if (a.external_urls) {
-                                    artist.url = a.external_urls.spotify
-                                }
-                                album.artists.push(artist)
-                            }
-
-                            track.album = album;
-
-                            for (const a of t.artists) {
-                                const artist = {
-                                    id: a.id,
-                                    name: a.name,
-                                    url: undefined
-                                };
-                                if (a.external_urls) {
-                                    artist.url = a.external_urls.spotify
-                                }
-                                track.artists.push(artist)
-                            }
-
-                            result.push(track);
-                        }
-
-                        return result;
-                    })
-                    .then(data => {
-                        let promise = [];
-
-                        for (let i = 0; i < data.length; i++) {
-                            promise[i] = spotifyApi.getArtist(data[i].artists[0].id)
-                                .then(artist => artist.body.genres)
-                                .then(genres => {
-                                    data[i].genres = genres;
-                                    return data[i];
-                                });
-                        }
-
-                        return Promise.all(promise);
-                    });
-
-                spotifyData.artists = spotifyApi.getFollowedArtists({ limit: 5 }) // 20
-                    .then(data => {
-                        const d = data.body.artists;
-                        let result = [];
-
-                        for (const i of d.items) {
-                            const artist = {
-                                followers: undefined,
-                                genres: i.genres,
-                                id: i.id,
-                                images: i.images,
-                                name: i.name,
-                                popularity: i.popularity,
-                                url: undefined
-                            };
-
-                            if (i.followers) { artist.followers = i.followers.total; }
-
-                            if (i.external_urls) { artist.url = i.external_urls.spotify; }
-
-                            result.push(artist);
-                        }
-
-                        return result;
-                    });
-
-                spotifyData.albums = spotifyApi.getMySavedAlbums({  limit: 5 }) // 50
-                    .then(data => {
-                        const d = data.body;
-                        let result = [];
-
-                        for (const i of d.items) {
-                            const album = {
-                                album_type: i.album.album_type,
-                                artists: [],
-                                available_markets: i.album.available_markets,
-                                id: i.album.id,
-                                images: i.album.images,
-                                label: i.album.label,
-                                name: i.album.name,
-                                popularity: i.album.popularity,
-                                release_date: i.album.release_date,
-                                release_date_precision: i.album.release_date_precision,
-                                total_tracks: i.album.total_tracks,
-                                tracks: [],
-                                url: undefined
-                            };
-
-                            for (const a of i.album.artists) {
-                                const artist = {
-                                    id: a.id,
-                                    name: a.name,
-                                    url: undefined
-                                };
-                                if (a.external_urls) { artist.url = a.external_urls.spotify; }
-                                album.artists.push(artist);
-                            }
-
-                            for (const t of i.album.tracks.items) {
                                 const track = {
+                                    album: {},
                                     artists: [],
                                     available_markets: t.available_markets,
                                     disc_number: t.disc_number,
@@ -646,45 +488,179 @@ router.get('/bypass-authentication', (req, res) => {
                                     track_number: t.track_number,
                                     url: undefined
                                 };
+                                if (t.external_urls) {
+                                    track.url = t.external_urls.spotify;
+                                }
+
+                                const album = {
+                                    album_type: t.album.album_type,
+                                    artists: [],
+                                    available_markets: t.album.available_markets,
+                                    id: t.album.id,
+                                    images: t.album.images,
+                                    name: t.album.name,
+                                    release_date: t.album.release_date,
+                                    release_date_precision: t.album.release_date_precision,
+                                    total_tracks: t.album.total_tracks,
+                                    url: undefined
+                                };
+                                if (t.album.external_urls) {
+                                    album.url = t.album.external_urls.spotify
+                                }
+
+                                for (const a of t.album.artists) {
+                                    const artist = {
+                                        id: a.id,
+                                        name: a.name,
+                                        url: undefined
+                                    };
+                                    if (a.external_urls) {
+                                        artist.url = a.external_urls.spotify
+                                    }
+                                    album.artists.push(artist)
+                                }
+
+                                track.album = album;
+
                                 for (const a of t.artists) {
                                     const artist = {
                                         id: a.id,
                                         name: a.name,
                                         url: undefined
                                     };
-                                    if (a.external_urls) { artist.url = a.external_urls.spotify; }
-                                    track.artists.push(artist);
+                                    if (a.external_urls) {
+                                        artist.url = a.external_urls.spotify
+                                    }
+                                    track.artists.push(artist)
                                 }
-                                if (t.external_urls) { track.url = t.external_urls.spotify; }
-                                album.tracks.push(track);
+
+                                result.push(track);
                             }
 
-                            if (i.external_urls) { album.url = i.external_urls.spotify; }
+                            return result;
+                        })
+                        .then(data => {
+                            let promise = [];
 
-                            result.push(album)
-                        }
+                            for (let i = 0; i < data.length; i++) {
+                                promise[i] = spotifyApi.getArtist(data[i].artists[0].id)
+                                    .then(artist => artist.body.genres)
+                                    .then(genres => {
+                                        data[i].genres = genres;
+                                        return data[i];
+                                    });
+                            }
 
-                        return result;
-                    });
+                            return Promise.all(promise);
+                        });
 
-            Promise.all([spotifyData.tracks, spotifyData.artists, spotifyData.albums])
-                .then(([tracks, artists, albums]) => {
-                    const data = {
-                        albums,
-                        email: req.session.email,
-                        artists,
-                        tracks
-                    };
+                    spotifyData.artists = spotifyApi.getFollowedArtists({ limit: 5 }) // 20
+                        .then(data => {
+                            const d = data.body.artists;
+                            let result = [];
 
-                    publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
-                    // fs.writeFileSync('output.json', JSON.stringify(data));
-                });
+                            for (const i of d.items) {
+                                const artist = {
+                                    followers: undefined,
+                                    genres: i.genres,
+                                    id: i.id,
+                                    images: i.images,
+                                    name: i.name,
+                                    popularity: i.popularity,
+                                    url: undefined
+                                };
 
-            // req.session.destroy();
-        } else {
-            env.message('Login failed!');
+                                if (i.followers) { artist.followers = i.followers.total; }
 
-            return res.status(403).json({ message: 'invalid token' });
+                                if (i.external_urls) { artist.url = i.external_urls.spotify; }
+
+                                result.push(artist);
+                            }
+
+                            return result;
+                        });
+
+                    spotifyData.albums = spotifyApi.getMySavedAlbums({  limit: 5 }) // 50
+                        .then(data => {
+                            const d = data.body;
+                            let result = [];
+
+                            for (const i of d.items) {
+                                const album = {
+                                    album_type: i.album.album_type,
+                                    artists: [],
+                                    available_markets: i.album.available_markets,
+                                    id: i.album.id,
+                                    images: i.album.images,
+                                    label: i.album.label,
+                                    name: i.album.name,
+                                    popularity: i.album.popularity,
+                                    release_date: i.album.release_date,
+                                    release_date_precision: i.album.release_date_precision,
+                                    total_tracks: i.album.total_tracks,
+                                    tracks: [],
+                                    url: undefined
+                                };
+
+                                for (const a of i.album.artists) {
+                                    const artist = {
+                                        id: a.id,
+                                        name: a.name,
+                                        url: undefined
+                                    };
+                                    if (a.external_urls) { artist.url = a.external_urls.spotify; }
+                                    album.artists.push(artist);
+                                }
+
+                                for (const t of i.album.tracks.items) {
+                                    const track = {
+                                        artists: [],
+                                        available_markets: t.available_markets,
+                                        disc_number: t.disc_number,
+                                        duration_ms: t.duration_ms,
+                                        explicit: t.explicit,
+                                        id: t.id,
+                                        is_local: t.is_local,
+                                        name: t.name,
+                                        popularity: t.popularity,
+                                        preview_url: t.preview_url,
+                                        track_number: t.track_number,
+                                        url: undefined
+                                    };
+                                    for (const a of t.artists) {
+                                        const artist = {
+                                            id: a.id,
+                                            name: a.name,
+                                            url: undefined
+                                        };
+                                        if (a.external_urls) { artist.url = a.external_urls.spotify; }
+                                        track.artists.push(artist);
+                                    }
+                                    if (t.external_urls) { track.url = t.external_urls.spotify; }
+                                    album.tracks.push(track);
+                                }
+
+                                if (i.external_urls) { album.url = i.external_urls.spotify; }
+
+                                result.push(album)
+                            }
+
+                            return result;
+                        });
+
+                    Promise.all([spotifyData.tracks, spotifyData.artists, spotifyData.albums])
+                        .then(([tracks, artists, albums]) => {
+                            const data = {
+                                albums,
+                                email: req.session.email,
+                                artists,
+                                tracks
+                            };
+
+                            publish_aggregated_data(env.SAS.RABBITMQ.AGGREGATIONS_QUEUE, data);
+                        });
+                }
+            });
         }
     });
 });
