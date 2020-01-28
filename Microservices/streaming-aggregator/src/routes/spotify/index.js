@@ -689,7 +689,6 @@ let publish_aggregated_data = function(queue, msg) {
         });
         setTimeout(function () {
             connection.close();
-            process.exit(0);
         }, 500);
     });
 };
