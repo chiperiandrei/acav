@@ -2,7 +2,7 @@
 ```
 docker pull mariadb
 
-docker run -d -p 15672:15672 -p 5672:5672 --name rabbit-acav rabbitmq:3-management
+docker run --name user-management-mysqldb -p3306:3306 -e MYSQL_ROOT_PASSWORD=acav -e MYSQL_DATABASE=acav -d mariadb
 ```
 
 
