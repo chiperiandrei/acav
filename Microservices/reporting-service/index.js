@@ -5,6 +5,7 @@ const REST_PATH = '/api/reporting-service';
 const bodyParser = require('body-parser');
 const dotEnv = require('dotenv');
 const elasticsearch = require('elasticsearch');
+const reports = require('./src/reports/reports.js');
 
 var client = new elasticsearch.Client({
     host: 'localhost:9200',
@@ -13,22 +14,46 @@ var client = new elasticsearch.Client({
 });
 router.get(REST_PATH + '/get-count-by-genre/:genre', (req, res) => {
     const genres = req.params.genre;
-    console.log(genres);
+    var query = `"tracks.genres" = "${genres}"`;
+
     client.search({
-        index: 'acav',
-        type: 'genre',
-        q: `user@email.com:${genres}`
-    }).then(function(resp) {
+        index: process.env.ACAV_INDEX,
+        q: query
+    }).then(function (resp) {
         res.status(200).send({
-            "count": resp.hits.total.value
+            "count": resp.hits.total.value,
+            "genre": genres
         })
-    }, function(err) {
-        //console.trace(err.message);
+    }, function (err) {
+        res.status(400).send({
+            "error": err
+        })
     });
 
+});
+router.get(REST_PATH + '/get-user-music-genres/:email', (req, res) => {
+    const email = req.params.email;
+    var query = `"email" = "${email}"`;
+    client.search({
+        index: process.env.ACAV_INDEX,
+        q: query
+    }).then(function (resp) {
+        var genres = [];
+        var i;
+        for( i =0;i<resp.hits.hits[0]._source.tracks.length;i++){
+            genres.push(... resp.hits.hits[0]._source.tracks[i].genres)
+        }
+        res.status(200).send({
+            "genres": genres,
+            "email" : email
+        })
+    }, function (err) {
+        res.status(400).send({
+            "error": err
+        })
+    });
 
 });
-
 
 
 dotEnv.config();
@@ -41,7 +66,6 @@ app.use('/', router);
 const port = process.env.port || 5000;
 
 app.listen(port);
-
 
 
 console.log(`Running at Port ${port}`);
