@@ -2,7 +2,7 @@
 ```
 docker pull mariadb
 
-docker run --name user-management-mysqldb -p3306:3306 -e MYSQL_ROOT_PASSWORD=acav -e MYSQL_DATABASE=acav -d mariadb
+docker run --name mariadb-acav -p3306:3306 -e MYSQL_ROOT_PASSWORD=acav -e MYSQL_DATABASE=acav -d mariadb
 ```
 
 
