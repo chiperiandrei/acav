@@ -13,4 +13,4 @@ var create_index = function(name) {
     });
 };
 
-exports.create_index = create_index;
+module.exports.create_index = create_index;

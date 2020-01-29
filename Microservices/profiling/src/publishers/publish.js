@@ -7,9 +7,9 @@ var push_to_ES = function(index, data) {
         index: index,
         type: 'user_aggregated_data',
         body: JSON.parse(data)
-    },function(err,resp,status) {
+    }, function(err, resp, status) {
         console.log(resp);
     });
 };
 
-exports.push_to_ES = push_to_ES;
+module.exports.push_to_ES = push_to_ES;
