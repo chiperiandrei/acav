@@ -69,7 +69,7 @@ router.post(REST_PATH + '/login', (req, res) => {
     connection.query(
         'SELECT * FROM users WHERE email = ?',
         [email], (error, results, fields) => {
-            if (results.length === 1) {
+            if (results && results.length === 1) {
                 if (md5(password) === results[0].password) {
                     res.json({
                         token: results[0].usertoken,
@@ -80,7 +80,6 @@ router.post(REST_PATH + '/login', (req, res) => {
                         "message": "Incorrect password"
                     });
                 }
-
             } else {
                 res.status(404).json({
                     message: 'Email or password is incorrect!'
