@@ -6,6 +6,6 @@ Client Secret   bcd3ed3db9444dd8aa18a5be6feb15e0
 ```
 
 <p align="center">
-    <img src="streaming-aggregator/assets/02.png" width="1000">
+    <img src="../streaming-aggregator/assets/02.png" width="1000">
 </p>
 
