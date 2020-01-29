@@ -38,10 +38,16 @@ router.get(REST_PATH + '/get-user-music-genres/:email', (req, res) => {
         index: process.env.ACAV_INDEX,
         q: query
     }).then(function (resp) {
-        var genres = [];
+        var genres = {};
         var i;
         for( i =0;i<resp.hits.hits[0]._source.tracks.length;i++){
-            genres.push(... resp.hits.hits[0]._source.tracks[i].genres)
+            var track_list = resp.hits.hits[0]._source.tracks[i].genres;
+            for( var j=0; j< track_list.length; j++) {
+                if(genres[track_list[j]])
+                    genres[track_list[j]]++;
+                else
+                    genres[track_list[j]] = 1;
+            }
         }
         res.status(200).send({
             "genres": genres,
