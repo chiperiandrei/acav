@@ -364,6 +364,8 @@ main > .container > .home-wrapper > .spotify-wrapper .playlists .playlists-grid 
   overflow: hidden;
   align-items: start;
   justify-content: center;
+  min-height: 200px;
+  background-color: #212121;
 }
 main > .container > .home-wrapper > .spotify-wrapper .playlists .playlists-grid .playlist .image img {
   width: 100%;

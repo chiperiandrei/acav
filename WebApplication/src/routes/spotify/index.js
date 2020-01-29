@@ -119,8 +119,11 @@ router.get('/playlists', isAuthorized, (req, res) => {
                                 name: i.name,
                                 href: i.external_urls.spotify,
                                 id: i.id,
-                                picture: i.images[0].url
+                                picture: undefined
                             };
+                            if (i.images.length > 0) {
+                                playlist.picture = i.images[0].url
+                            }
                             temporary.push(playlist);
                         }
 
