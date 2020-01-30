@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const env = require('../../environment');
 const { isAuthorized } = require('../../session');
-
+var request = require('request');
 router.get('/', isAuthorized, (req, res) => {
     env.log('GET', `${env.WA.URI}/stats`);
 
@@ -12,14 +12,20 @@ router.get('/', isAuthorized, (req, res) => {
         currentPage: 'stats'
     };
 
-    const reportingUri = 'localhost:5000/api/reporting-service/get-user-music-genres/';
-
-    request.get(reportingUri + sess.email,
-        (error, response, body) => {
-            if (!error && response.statusCode === 200) {
-                drawPieChart(mapResult(body.genres));
-            }
+    const reportingUri = 'http://localhost:5000/api/reporting-service/get-user-music-genres/';
+    request(`${reportingUri}+${sess.user.email}`, { json: true }, (err, res, body) => {
+        if (err) { return console.log(err); }
+        console.log(body.genres);
+        drawPieChart(mapResult(body.genres));
     });
+    // request.get(reportingUri + sess.user.email,
+    //     (error, response, body) => {
+    //         console.log(response)
+    //         if (!error && response.statusCode === 200) {
+    //
+    //             drawPieChart(mapResult(body.genres));
+    //         }
+    // });
 
     if (sess.wa && sess.user) {
         data.email = sess.user.email;
@@ -112,7 +118,8 @@ function getRandomRed() {
 
 function mapResult(map) {
     var mappedResults = [];
-    for (const [key, val] of map.entries()) {
+    console.log(map)
+    for (const [key, val] of Object.entries(map)) {
         mappedResults.push({label: key, value: val});
     }
     return mappedResults;
